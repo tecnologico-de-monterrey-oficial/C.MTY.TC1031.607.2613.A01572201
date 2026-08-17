@@ -37,6 +37,7 @@ int main() {
     List<string> things;
     things.insert("Laptop");
     things.insert("bottle");
+    things.print();
 
     // Operaciones de la Tarea
 
