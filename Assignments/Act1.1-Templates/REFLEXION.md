@@ -11,3 +11,7 @@
 ## Si tuvieras que explicarle a un compañero qué es un template en C++ usando tus propias palabras, sin tecnicismos, ¿qué le dirías?
 
 ### Si tuviera que explicarle a alguien qué es un template en C++, yo le diría que es una herramienta que permite que una operación o clase pueda ser utilizada para procesar diferentes tipos de datos sin la necesidad de tener que escribir nuevamente toda la operación o clase con otro tipo de dato en mente; en otras palabras, creando una versión generalizada de una clase u operación que puede adaptarse a distintos tipos de datos.
+
+## Referencias
+
+### Microsoft. (2025, July 11). Clase vector. Microsoft Learn. https://learn.microsoft.com/es-es/cpp/standard-library/vector-class?view=msvc-170#erase 
