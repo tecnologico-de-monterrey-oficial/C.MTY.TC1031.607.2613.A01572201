@@ -71,20 +71,38 @@ int bacteriasRecursive(int n) {
     return bacteria + born - died;
 }
 
-int investmentIterative(int n) {
+double investmentIterative(int n, double m) {
+    for (int i = 0; i < n; i++) {
+        m *= 1.1875;
+    }
 
+    return m;
 }
 
-int investmentRecursive(int n) {
+double investmentRecursive(int n, double m) {
+    if (n == 0) {
+        return m;
+    }
 
+    return investmentRecursive(n - 1, m * 1.1875);
 }
 
-int powIterative(int n) {
+double powIterative(double m, double n) {
+    double result = m;
 
+    for (int i = 1; i < n; i++) {
+        result *= m;
+    }
+
+    return result;
 }
 
-int powRecursive(int n) {
+double powRecursive(double m, double n) {
+    if (n == 0) {
+        return 1;
+    }
 
+    return powRecursive(m, n - 1) * m;
 }
 
 int main() {
@@ -109,4 +127,16 @@ int main() {
 
     // Bacterias Recursivas
     cout << "La cantidad de bacterias recursivas en 5 dias es: " << bacteriasRecursive(5) << endl;
+
+    // Inversion Iterativa
+    cout << "La inversion iterativa en 5 meses de 10 es: " << investmentIterative(5, 10) << endl;
+
+    // Inversion Recursiva
+    cout << "La inversion recursiva en 5 meses de 10 es: " << investmentRecursive(5, 10) << endl;
+
+    // Potencia Iterativa
+    cout << "5 a la potencia iterativa de 3 es: " << powIterative(5, 3) << endl;
+
+    // Potencia Recursiva
+    cout << "5 a la potencia recursiva de 3 es: " << powRecursive(5, 3) << endl;
 }
