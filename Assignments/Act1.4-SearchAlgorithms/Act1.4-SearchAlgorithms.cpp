@@ -24,7 +24,7 @@ int binarySearch(vector<T> &list, T data) {
     // buscamos el elemento mientras left <= right
     while (left <= right) {
         // obtenemos la mitad
-        int mid = (left - right) / 2;
+        int mid = (left + right) / 2;
 
         // comparamos el valor buscando con el valor de la mitad
         if (data == list[mid]) {
