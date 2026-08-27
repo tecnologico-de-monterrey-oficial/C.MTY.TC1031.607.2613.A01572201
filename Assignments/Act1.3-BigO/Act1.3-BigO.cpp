@@ -17,6 +17,7 @@ int sumaImparIterativa(vector<int> &lista) {
 
 // El orden de esta función es O(n)
 int sumaImparRecursiva(vector<int> &lista, int n) {
+    // n = indice
     if (n == lista.size()) {
         return 0;
     }
