@@ -1,3 +1,6 @@
+// Daniel Gómez Guerrero
+// A01572201
+
 #include <iostream>
 #include <vector>
 using namespace std;
