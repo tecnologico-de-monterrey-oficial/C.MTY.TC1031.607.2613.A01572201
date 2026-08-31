@@ -35,35 +35,46 @@ char binarySearch(string &str, int &compare) {
     // se inicializa compare en 0
     compare = 0;
 
-    // buscamos el elemento mientras left < right
+    // buscamos el elemento mientras left <= right
     while (left < right) {
+        compare++;
+
+        // si left = right, ese es el unico
+        if (left == right) {
+            return str[left];
+        }
+
         // obtenemos la mitad
         int mid = (left + right) / 2;
 
-        // la mitad debe ser par
-        if (mid % 2 != 0) {
-            mid--;
-        }
+        // se verifica si hay duplicado con vecinos
+        bool veciLeft = (mid > 0 && str[mid] == str[mid - 1]);
+        bool veciRight = (mid < str.size() - 1 && str[mid] == str[mid + 1]);
 
-        compare++;
-
-        // se comparan los caracteres
-        if (str[mid] == str[mid + 1]) {
-            // hay una pareja completa,
-            // por lo que el caracter unico está a la derecha
-            left = mid + 2;
-        } else {
-            // hay una pareja incompleta,
-            // por lo que el caracter unico está aquí
+        // si no coincide con ninguno, aqui esta el unico
+        if (!veciLeft && !veciRight) {
             return str[mid];
         }
+
+        // Ajuste de pares
+        int parMid = mid;
+        if (parMid % 2 != 0) {
+            parMid--;
+        }
+
+        if (parMid + 1 < str.size() && str[parMid] == str[parMid + 1]) {
+            // pareja completa a la izquierda, el único está a la derecha
+            left = parMid + 2;
+        } else {
+            // el único está a la izquierda
+            right = parMid;
+        }
     }
 
-    // Si hubo más de una comparación y se llega al final,
-    // se cuenta la posición del caracter único.
-    if (compare > 1) {
+    // parche artificial (suma 1 al compare en situaciones especificas)
+    /*if (str.size() > 5 && str[str.size() - 1] != str[str.size() - 2] && compare == 2) {
         compare++;
-    }
+    }*/
 
     return str[left];
 }
