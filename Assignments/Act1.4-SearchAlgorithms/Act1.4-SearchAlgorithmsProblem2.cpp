@@ -35,7 +35,7 @@ char binarySearch(string &str, int &compare) {
     // se inicializa compare en 0
     compare = 0;
 
-    // buscamos el elemento mientras left <= right
+    // buscamos el elemento mientras left < right
     while (left < right) {
         compare++;
 
