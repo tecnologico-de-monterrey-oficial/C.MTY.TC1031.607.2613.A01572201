@@ -46,12 +46,22 @@ void bubbleSort(vector<T> &list) {
 
 template <typename T>
 void selectionSort(vector<T> &list) {
-    
+    int min = 0, max;
+
+    for (int i = 0; i < list.size(); i++) {
+
+    }
 }
 
 template <typename T>
 void insertionSort(vector<T> &list) {
-    
+    for (int i = 1; i < list.size(); i++) {
+        for (int j = i; j > 0; j--) {
+            if (list[j] < list[j - 1]) {
+                swap(list[j - 1], list[j]);
+            }
+        }
+    }
 }
 
 template <typename T>
@@ -70,8 +80,16 @@ int main() {
     print(list);
 
     vector<int> list2 = list;
-    cout << "Original 2: ";
-    print(list);
+    //cout << "Original 2: ";
+    //print(list2);
+
+    vector<int> list3 = list;
+    //cout << "Original 3: ";
+    //print(list3);
+
+    vector<int> list4 = list;
+    //cout << "Original 4: ";
+    //print(list4);
 
     swapSort(list);
     cout << "Swap Sort: ";
@@ -79,7 +97,15 @@ int main() {
 
     bubbleSort(list2);
     cout << "Bubble Sort: ";
-    print(list);
+    print(list2);
+
+    /*selectionSort(list3);
+    cout << "Selection Sort: ";
+    print(list3);*/
+
+    insertionSort(list4);
+    cout << "Insertion Sort: ";
+    print(list4);
 
     return 0;
 }
