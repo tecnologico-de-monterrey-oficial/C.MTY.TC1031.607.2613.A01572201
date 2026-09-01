@@ -71,7 +71,7 @@ char binarySearch(string &str, int &compare) {
         }
     }
 
-    // parche artificial (suma 1 al compare en situaciones especificas)
+    // parche artificial (suma 1 al compare en una situacion especifica)
     /*if (str.size() > 5 && str[str.size() - 1] != str[str.size() - 2] && compare == 2) {
         compare++;
     }*/
