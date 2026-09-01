@@ -46,18 +46,38 @@ void bubbleSort(vector<T> &list) {
 
 template <typename T>
 void selectionSort(vector<T> &list) {
-    int min = 0, max;
+    // iteramos toda la lista, de principio a 1 antes del final
+    for (int i = 0; i < list.size() - 1; i++) {
+        // hacemos el índice de la posión i como el más chico
+            int min = i;
 
-    for (int i = 0; i < list.size(); i++) {
+        // iteramos desde el siguiente índice hasta el final
+        for (int j = i + 1; j < list.size(); j++) {
+            //comparamos el valor de j contra min
+            if (list[j] < list[min]) {
+                // si es menor, 
+                // actualizamos el valor de min
+                min = j;
+            }
+        }
 
+        // intercambiamos el valor de min por el valor de i
+        swap(list[i], list[min]);
     }
 }
 
 template <typename T>
 void insertionSort(vector<T> &list) {
+    // iteramos la lista desde la segunda posición hasta el final
     for (int i = 1; i < list.size(); i++) {
+
+        // iteramos desde el índice i hasta 0
         for (int j = i; j > 0; j--) {
+
+           //comparamos el valor de j contra j - 1
             if (list[j] < list[j - 1]) {
+                // si es menor, 
+                // los intercambiamos
                 swap(list[j - 1], list[j]);
             }
         }
@@ -66,7 +86,7 @@ void insertionSort(vector<T> &list) {
 
 template <typename T>
 void quickSort(vector<T> &list) {
-    
+    // pivot, index, aux? 3 variables?
 }
 
 template <typename T>
@@ -99,9 +119,9 @@ int main() {
     cout << "Bubble Sort: ";
     print(list2);
 
-    /*selectionSort(list3);
+    selectionSort(list3);
     cout << "Selection Sort: ";
-    print(list3);*/
+    print(list3);
 
     insertionSort(list4);
     cout << "Insertion Sort: ";
