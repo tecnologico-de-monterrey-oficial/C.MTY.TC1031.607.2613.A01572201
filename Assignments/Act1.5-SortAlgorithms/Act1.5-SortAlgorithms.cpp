@@ -114,15 +114,15 @@ template <typename T>
 void quickSort(vector<T> &list, int min, int max) {
     if (min < max) {
         // se particiona el vector en sublistas
-        int sublist = part(list, min, max);
+        int pivot = part(list, min, max);
 
         // se aplica recursivamente quickSort
         // en los elementos antes del pivot
-        quickSort(list, min, sublist - 1);
+        quickSort(list, min, pivot - 1);
 
         // se aplica recursivamente quickSort
         // en los elementos despues del pivot
-        quickSort(list, sublist + 1, max);
+        quickSort(list, pivot + 1, max);
     }
 }
 
