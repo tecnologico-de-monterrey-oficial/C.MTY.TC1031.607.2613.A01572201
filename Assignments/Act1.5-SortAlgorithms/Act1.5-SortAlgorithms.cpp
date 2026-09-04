@@ -85,50 +85,128 @@ void insertionSort(vector<T> &list) {
 }
 
 template <typename T>
-T part(vector<T> &sublist, int min, int max) {
-    // pivot es igual al ultimo elemento de la sublista
-    T pivot = sublist[max];
-    // index es el limite de los elementos <= al pivot
-    int index = min - 1;
+int getPivot(vector<T> &sublist, int min, int max) {
+    // pivot es el mismo valor que max
+
+    // creamos una variable auxiliar con valor min - 1
+    int aux = min - 1;
 
     // iteramos desde el inicio de la sublista hasta antes del pivot
-    for (int aux = min; aux < max; aux++) {
-        // comparamos sublist[aux] con pivot
-        if (sublist[aux] <= pivot) {
-            // si es menor o igual,
-            // index aumenta
-            index++;
-            // y el valor en aux se intercambia con el de index
+    for (int index = min; index < max; index++) {
+        // comparamos el valor en index con el que esta en el pivot
+        if (sublist[index] <= sublist[max]) {
+            // aux aumenta
+            aux++;
+            // se intercambia el valor en aux con el que esta en index
             swap(sublist[aux], sublist[index]);
         }
     }
 
-    // pivot se coloca en la posicion correcta
-    swap(sublist[index + 1], sublist[max]);
+    // aux incrementa
+    aux++;
 
-    // retorna el indice de particion
-    return index + 1;
+    // se intercambia el valor en aux con el que esta en el pivot
+    swap(sublist[aux], sublist[max]);
+
+    // se regresa aux
+    return aux;
 }
 
 template <typename T>
 void quickSort(vector<T> &list, int min, int max) {
+    // la condicion de control es min < max
     if (min < max) {
         // se particiona el vector en sublistas
-        int pivot = part(list, min, max);
+        int pivot = getPivot(list, min, max);
 
-        // se aplica recursivamente quickSort
-        // en los elementos antes del pivot
+        // ordenamos la lista antes del pivote
         quickSort(list, min, pivot - 1);
 
-        // se aplica recursivamente quickSort
-        // en los elementos despues del pivot
+        // ordenamos la lista despues del pivote
         quickSort(list, pivot + 1, max);
     }
 }
 
 template <typename T>
-void mergeSort(vector<T> &list) {
-    
+void merge(vector<T> &list, int left, int mid, int right) {
+    // creamos una lista para los valores del lado izquierdo
+    vector<T> leftList;
+    // iteramos la lista de left hasta mid
+    for (int i = left; i <= mid; i++) {
+        leftList.push_back(list[i]);
+    }
+
+    // creamos una lista para los valores del lado derecho
+    vector<T> rightList;
+    // iteramos la lista de mid + 1 hasta right
+    for (int j = mid + 1; j <= right; j++) {
+        rightList.push_back(list[j]);
+    }
+
+    // combinamos las dos listas
+    // creamos una variable index que contenga el indice a actualizar
+    int index = left;
+    // inicializamos el indice del lado izquierdo
+    int i = 0;
+    // inicializamos el indice del lado derecho
+    int j = 0;
+
+    // iteramos mientras no se acaben las listas
+    while (i < leftList.size() && j < rightList.size()) {
+        // comparamos el valor de i de la lista izquierda con el valor de j de la lista derecha
+        if (leftList[i] < rightList[j]) {
+            // actualizamos list en index con el valor de leftList en i
+            list[index] = leftList[i];
+            // incrementamos i
+            i++;
+        } else {
+            // actualizamos list en index con el valor de rightList en j
+            list[index] = rightList[j];
+            // incrementamos j
+            j++;
+        }
+
+        // incrementamos index
+        index++;
+    }
+
+    // vaciamos la lista del lado izquierdo
+    while (i < leftList.size()) {
+        // actualizamos list en index con el valor de leftList en i
+        list[index] = leftList[i];
+        // incrementamos i
+        i++;
+        // incrementamos index
+        index++;
+    }
+
+    // vaciamos la lista del lado derecho
+    while (j < rightList.size()) {
+        // actualizamos list en index con el valor de rightList en j
+        list[index] = rightList[j];
+        // incrementamos j
+        j++;
+        // incrementamos index
+        index++;
+    }
+}
+
+template <typename T>
+void mergeSort(vector<T> &list, int left, int right) {
+    // la condicion de control es left < right
+    if (left < right) {
+        // calculamos mid
+        int mid = (left + right) / 2;
+
+        // ordenamos de left a mid
+        mergeSort(list, left, mid);
+
+        // ordenamos de mid + 1 a right
+        mergeSort(list, mid + 1, right);
+
+        // combinamos las dos partes de la lista
+        merge(list, left, mid, right);
+    }
 }
 
 int main() {
@@ -152,6 +230,10 @@ int main() {
     //cout << "Original 5: ";
     //print(list5);
 
+    vector<int> list6 = list;
+    //cout << "Original 6: ";
+    //print(list6);
+
     swapSort(list);
     cout << "Swap Sort: ";
     print(list);
@@ -171,6 +253,10 @@ int main() {
     quickSort(list5, 0, list5.size() - 1);
     cout << "Quick Sort: ";
     print(list5);
+
+    mergeSort(list6, 0, list6.size() - 1);
+    cout << "Merge Sort: ";
+    print(list6);
 
     return 0;
 }
