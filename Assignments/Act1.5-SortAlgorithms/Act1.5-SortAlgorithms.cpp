@@ -85,8 +85,45 @@ void insertionSort(vector<T> &list) {
 }
 
 template <typename T>
-void quickSort(vector<T> &list) {
-    // pivot, index, aux? 3 variables?
+T part(vector<T> &sublist, int min, int max) {
+    // pivot es igual al ultimo elemento de la sublista
+    T pivot = sublist[max];
+    // index es el limite de los elementos <= al pivot
+    int index = min - 1;
+
+    // iteramos desde el inicio de la sublista hasta antes del pivot
+    for (int aux = min; aux < max; aux++) {
+        // comparamos sublist[aux] con pivot
+        if (sublist[aux] <= pivot) {
+            // si es menor o igual,
+            // index aumenta
+            index++;
+            // y el valor en aux se intercambia con el de index
+            swap(sublist[aux], sublist[index]);
+        }
+    }
+
+    // pivot se coloca en la posicion correcta
+    swap(sublist[index + 1], sublist[max]);
+
+    // retorna el indice de particion
+    return index + 1;
+}
+
+template <typename T>
+void quickSort(vector<T> &list, int min, int max) {
+    if (min < max) {
+        // se particiona el vector en sublistas
+        int sublist = part(list, min, max);
+
+        // se aplica recursivamente quickSort
+        // en los elementos antes del pivot
+        quickSort(list, min, sublist - 1);
+
+        // se aplica recursivamente quickSort
+        // en los elementos despues del pivot
+        quickSort(list, sublist + 1, max);
+    }
 }
 
 template <typename T>
@@ -111,6 +148,10 @@ int main() {
     //cout << "Original 4: ";
     //print(list4);
 
+    vector<int> list5 = list;
+    //cout << "Original 5: ";
+    //print(list5);
+
     swapSort(list);
     cout << "Swap Sort: ";
     print(list);
@@ -126,6 +167,10 @@ int main() {
     insertionSort(list4);
     cout << "Insertion Sort: ";
     print(list4);
+
+    quickSort(list5, 0, list5.size() - 1);
+    cout << "Quick Sort: ";
+    print(list5);
 
     return 0;
 }
