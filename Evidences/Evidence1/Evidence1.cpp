@@ -15,7 +15,7 @@ int getPivot(vector<T> &sublist, int min, int max) {
     // iteramos desde el inicio de la sublista hasta antes del pivot
     for (int index = min; index < max; index++) {
         // comparamos el valor en index con el que esta en el pivot
-        if (sublist[index] <= sublist[max]) {
+        if (sublist[index] <= sublist[max]) { // esta parte es esencial para la evidencia
             // aux aumenta
             aux++;
             // se intercambia el valor en aux con el que esta en index
