@@ -209,6 +209,28 @@ void mergeSort(vector<T> &list, int left, int right) {
     }
 }
 
+template <typename T>
+void shellSort(vector<T> &list) {
+    int size = list.size();
+    int half = size / 2;
+
+    while (half > 0) {
+        for (int i = half; i < size; i++) {
+            T temp = list[i];
+            int aux = i;
+
+            while (aux >= half && list[aux - half] > temp) {
+                list[aux] = list[aux - half];
+                aux -= half;
+            }
+
+            list[aux] = temp;
+        }
+
+        half /= 2;
+    }
+}
+
 int main() {
     vector<int> list = {15, 7, 3, 9, 12, 5, 2};
     cout << "Original: ";
@@ -234,6 +256,10 @@ int main() {
     //cout << "Original 6: ";
     //print(list6);
 
+    vector<int> list7 = list;
+    //cout << "Original 7: ";
+    //print(list7);
+
     swapSort(list);
     cout << "Swap Sort: ";
     print(list);
@@ -257,6 +283,10 @@ int main() {
     mergeSort(list6, 0, list6.size() - 1);
     cout << "Merge Sort: ";
     print(list6);
+
+    shellSort(list7);
+    cout << "Shell Sort: ";
+    print(list7);
 
     return 0;
 }
