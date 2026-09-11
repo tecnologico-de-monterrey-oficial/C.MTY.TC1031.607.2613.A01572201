@@ -8,9 +8,19 @@
 #include <chrono>
 using namespace std;
 
+// para imprimir toda la lista
 template <typename T>
 void print(vector<T> &list) {
     for (int i = 0; i < list.size(); i++) {
+        cout << list[i] << " ";
+    }
+    cout << endl;
+}
+
+// para imprimir los primeros 20 elementos de la lista
+template <typename T>
+void printSmall(vector<T> &list) {
+    for (int i = 0; i < 20; i++) {
         cout << list[i] << " ";
     }
     cout << endl;
@@ -430,14 +440,17 @@ int main() {
             vector<int> intList1000 = genIntList(1000);
             sortMenu(intList1000, sortOption);
             // print(intList1000);
+            printSmall(intList1000);
 
             vector<int> intList10000 = genIntList(10000);
             sortMenu(intList10000, sortOption);
             // print(intList10000);
+            printSmall(intList10000);
 
             vector<int> intList100000 = genIntList(100000);
             sortMenu(intList100000, sortOption);
             // print(intList100000);
+            printSmall(intList100000);
 
             break;
         }
@@ -445,14 +458,17 @@ int main() {
             vector<double> doubleList1000 = genDoubleList(1000);
             sortMenu(doubleList1000, sortOption);
             // print(doubleList1000);
+            printSmall(doubleList1000);
 
             vector<double> doubleList10000 = genDoubleList(10000);
             sortMenu(doubleList10000, sortOption);
             // print(doubleList10000);
+            printSmall(doubleList10000);
 
             vector<double> doubleList100000 = genDoubleList(100000);
             sortMenu(doubleList100000, sortOption);
             // print(doubleList100000);
+            printSmall(doubleList100000);
 
             break;
         }
@@ -460,14 +476,17 @@ int main() {
             vector<float> floatList1000 = genFloatList(1000);
             sortMenu(floatList1000, sortOption);
             // print(floatList1000);
+            printSmall(floatList1000);
 
             vector<float> floatList10000 = genFloatList(10000);
             sortMenu(floatList10000, sortOption);
             // print(floatList10000);
+            printSmall(floatList10000);
 
             vector<float> floatList100000 = genFloatList(100000);
             sortMenu(floatList100000, sortOption);
             // print(floatList100000);
+            printSmall(floatList100000);
 
             break;
         }
