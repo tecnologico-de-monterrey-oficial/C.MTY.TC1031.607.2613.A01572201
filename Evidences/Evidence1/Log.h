@@ -21,7 +21,7 @@ struct Log {
     string day;
     string time;
     string ip;
-    string message;
+    string log;
     string key;
 
     // Constructores
@@ -31,17 +31,16 @@ struct Log {
         day = "";
         time = "";
         ip = "";
-        message = "";
+        log = "";
         key = "";
     };
 
-    Log(int year, string month, int day, string time, string ip, string message) {
+    Log(int year, string month, int day, string time, string ip) {
         this->year = to_string(year);
         this->month = month;
         this->day = to_string(day);
         this->time = time;
         this->ip = ip;
-        this->message = message;
     }; 
 
     // Métodos

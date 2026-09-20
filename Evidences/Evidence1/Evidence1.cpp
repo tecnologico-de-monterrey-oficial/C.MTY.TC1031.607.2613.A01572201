@@ -288,7 +288,7 @@ void binarySearch(vector<T> &list, T aux, bool inicio) {
 
     // iteramos mientras left sea menor o igual a right
     while (left <= right) {
-        // calculamos el mid
+        // calculamos el mid y obtenemos el valor en la posición mid
         int mid = left + (right - left) / 2;
         T currentValue = list[mid];
         
@@ -312,6 +312,16 @@ void binarySearch(vector<T> &list, T aux, bool inicio) {
             return list[right];
         }
     }
+}
+
+void printLogs(vector<Log> &list, int start, int end) {
+    // iteramos desde start hasta end
+    for (int i = start; i <= end; i++) {
+       // imprimimos el log en la posición i
+       cout << list[i].log << endl;
+    }
+    
+  cout << endl;  
 }
 
 int main() {
