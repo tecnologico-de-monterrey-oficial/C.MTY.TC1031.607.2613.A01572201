@@ -2,8 +2,6 @@
 // A01572201
 
 #include "Log.h"
-#include <vector>
-#include <iostream>
 
 template <typename T>
 void swapSort(vector<T> &list, long long &comparisons, long long &swaps) {
