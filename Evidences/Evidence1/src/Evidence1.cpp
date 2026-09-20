@@ -1,10 +1,11 @@
 // Daniel Gómez Guerrero
 // A01572201
 
-#include "Log.h"
+#include "..\include\Log.h"
+
 
 template <typename T>
-void swapSort(vector<T> &list, long long &comparisons, long long &swaps) {
+void swapSort(vector<T> &list) {
     // iteramos toda la lista, de principio a 1 antes del final
     for (int i = 0; i < list.size() - 1; i++) {
         // iteramos desde el siguiente índice hasta el final
@@ -18,19 +19,13 @@ void swapSort(vector<T> &list, long long &comparisons, long long &swaps) {
                 // si es mayor, los intercambiamos
                 list[i] = b;
                 list[j] = a;
-
-                // incrementamos el contador de swaps
-                swaps++;
             }
-
-            // incrementamos el contador de comparaciones
-            comparisons++;
         }
     }
 }
 
 template <typename T>
-void bubbleSort(vector<T> &list, long long &comparisons, long long &swaps) {
+void bubbleSort(vector<T> &list) {
     // creamos una variable booleana para controlar si hubo cambios en la iteración
     bool change = true;
 
@@ -46,19 +41,13 @@ void bubbleSort(vector<T> &list, long long &comparisons, long long &swaps) {
                 // si es mayor, los intercambiamos y marcamos que hubo un cambio
                 change = true;
                 swap(list[j], list[j + 1]);
-
-                // incrementamos el contador de swaps
-                swaps++;
             }
-
-            // incrementamos el contador de comparaciones
-            comparisons++;
         }
     }
 }
 
 template <typename T>
-void selectionSort(vector<T> &list, long long &comparisons, long long &swaps) {
+void selectionSort(vector<T> &list) {
     // iteramos toda la lista, de principio a 1 antes del final
     for (int i = 0; i < list.size() - 1; i++) {
         // hacemos el índice de la posión i como el más chico
@@ -72,24 +61,18 @@ void selectionSort(vector<T> &list, long long &comparisons, long long &swaps) {
                 // actualizamos el valor de min
                 min = j;
             }
-
-            // incrementamos el contador de comparaciones
-            comparisons++;
         }
 
         // intercambiamos el valor de min por el valor de i
         // si min es diferente a i
         if (min != i) {
             swap(list[i], list[min]);
-
-            // incrementamos el contador de swaps
-            swaps++;
         }
     }
 }
 
 template <typename T>
-void insertionSort(vector<T> &list, long long &comparisons, long long &swaps) {
+void insertionSort(vector<T> &list) {
     // iteramos la lista desde la segunda posición hasta el final
     for (int i = 1; i < list.size(); i++) {
 
@@ -100,13 +83,7 @@ void insertionSort(vector<T> &list, long long &comparisons, long long &swaps) {
                 // si es menor, 
                 // los intercambiamos
                 swap(list[j - 1], list[j]);
-
-                // incrementamos el contador de swaps
-                swaps++;
             }
-
-            // incrementamos el contador de comparaciones
-            comparisons++;
         }
     }
 }
@@ -281,7 +258,7 @@ string monthValues(string month) {
 };
 
 template <typename T>
-void binarySearch(vector<T> &list, T aux, bool inicio) {
+int binarySearch(vector<T> &list, T aux, bool inicio) {
     // creamos dos variables para el inicio y el final de la lista
     int left = 0;
     int right = list.size() - 1;
@@ -326,7 +303,7 @@ void printLogs(vector<Log> &list, int start, int end) {
 
 void generateFile(string fileName, vector<Log> &list, int start, int end) {
     // creamos un archivo con el nombre fileName
-    ofstream file(fileName);
+    ofstream file;
 
     // abrimos el archivo en modo escritura y truncado
     file.open(fileName, ofstream::out | fstream::trunc);
@@ -354,6 +331,7 @@ int main() {
     auto startTime = chrono::high_resolution_clock::now();
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+    string line;
 
     // variables para guardar los datos de los logs
     Log tempLog, startLog, endLog;
@@ -373,27 +351,126 @@ int main() {
         cin >> option;
     }
 
+    ifstream inputFile;
+
     if (option == 1) {
         // abrimos el archivo log607-1.txt
-        ifstream inputFile("log607-1.txt");
-
-        // validamos que el archivo se haya abierto correctamente
-        if (!inputFile.is_open()) {
-            cout << "Error al abrir el archivo" << endl;
-            return 1;
-        }
+        inputFile.open("../data/log607-1.txt");
     } else if (option == 2) {
         // abrimos el archivo log607-2.txt
-        ifstream inputFile("log607-2.txt");
+        inputFile.open("../data/log607-2.txt");
+    } 
 
-        // validamos que el archivo se haya abierto correctamente
+    // validamos que el archivo se haya abierto correctamente
         if (!inputFile.is_open()) {
             cout << "Error al abrir el archivo" << endl;
             return 1;
         }
-    } 
 
     // nombre de los archivos de salida
     string outputFile = "output608.txt", rangeFile = "range607.txt";
 
+    while (getline(inputFile, line)) {
+        // creamos un stringstream con la línea leída
+        stringstream stream(line);
+
+        // guardamos los datos de la línea en un log temporal
+        tempLog.log = line;
+        stream >> tempLog.month >> tempLog.day >> tempLog.year >> tempLog.time >> tempLog.ip;
+
+        // creamos la clave única del log
+        tempLog.key = tempLog.createKey(tempLog.year, monthValues(tempLog.month), tempLog.day, tempLog.arrangeTime(tempLog.time), tempLog.arrangeIp(tempLog.ip));
+
+        // agregamos el log temporal al vector de logs
+        logs.push_back(tempLog);
+    }
+
+    logsUnsorted = logs;
+
+    option = -1;
+    // validamos que la opción este disponible
+    while (option != 0) {
+
+        cout << "Que accion desea realizar?" << endl;
+        cout << "0. Salir" << endl;
+        cout << "1. Usar Swap Sort" << endl;
+        cout << "2. Usar Bubble Sort" << endl;
+        cout << "3. Usar Selection Sort" << endl;
+        cout << "4. Usar Insertion Sort" << endl;
+        cout << "5. Usar Quick Sort" << endl;
+        cout << "6. Usar Merge Sort" << endl;
+        cout << "7. Usar Shell Sort" << endl;
+        cout << "8. Establecer rango de busqueda" << endl;
+        cout << "9. Buscar rango de busqueda" << endl;
+        cin >> option;
+
+        switch (option) {
+            case 0:
+                cout << "Saliendo del programa..." << endl;
+                return 0;
+            case 1:
+                startTime = chrono::high_resolution_clock::now();
+                swapSort(logs);
+                endTime = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+                sorted = true;
+                break;
+            case 2:
+                startTime = chrono::high_resolution_clock::now();
+                bubbleSort(logs);
+                endTime = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+                sorted = true;
+                break;
+            case 3:
+                startTime = chrono::high_resolution_clock::now();
+                selectionSort(logs);
+                endTime = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+                sorted = true;
+                break;
+            case 4:
+                startTime = chrono::high_resolution_clock::now();
+                insertionSort(logs);
+                endTime = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+                sorted = true;
+                break;
+            case 5:
+                startTime = chrono::high_resolution_clock::now();
+                quickSort(logs, 0, logs.size() - 1);
+                endTime = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+                sorted = true;
+                break;
+            case 6: 
+                startTime = chrono::high_resolution_clock::now();
+                mergeSort(logs, 0, logs.size() - 1);
+                endTime = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+                sorted = true;
+                break;
+            case 7: 
+                startTime = chrono::high_resolution_clock::now();
+                shellSort(logs);
+                endTime = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+                sorted = true;
+                break;
+
+        }
+
+        if(logs.empty()){
+            cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+            continue;
+        }
+
+        for(auto s : logs){
+             cout << s.log << endl;
+        }
+
+        generateFile(outputFile, logs, 0, logs.size()-1);
+        cout << "\nSe ha guardado la informacion\n\n";
+    }
+    
 }

@@ -45,7 +45,7 @@ struct Log {
 
     // Métodos
     // Método para arreglar la IP agregando ceros a la izquierda
-    string arrangeIp() {
+    string arrangeIp(string ip) {
         // creamos un stringstream con la ip
         stringstream ipStream(ip);
 
@@ -73,7 +73,7 @@ struct Log {
     };
 
     // Método para arreglar el tiempo
-    string arrangeTime() {
+    string arrangeTime(string time) {
         // creamos un stringstream con el tiempo
         stringstream timeStream(time);
 
@@ -101,7 +101,7 @@ struct Log {
     };
 
     // Método para crear la clave única del log
-    string createKey() {
+    string createKey(string year, string month, string day, string time, string ip) {
         return year + month + day + time + ip;
     };
 
