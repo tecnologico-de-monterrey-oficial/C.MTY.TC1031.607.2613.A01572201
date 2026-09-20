@@ -5,17 +5,25 @@
 
 template <typename T>
 void swapSort(vector<T> &list, long long &comparisons, long long &swaps) {
+    // iteramos toda la lista, de principio a 1 antes del final
     for (int i = 0; i < list.size() - 1; i++) {
+        // iteramos desde el siguiente índice hasta el final
         for (int j = i + 1; j < list.size(); j++) {
+            // creamos variables auxiliares para guardar los valores de i y j
             T a = list[i];
             T b = list[j];
 
+            // comparamos el valor de i contra j
             if (list[i] > list[j]) {
+                // si es mayor, los intercambiamos
                 list[i] = b;
                 list[j] = a;
+
+                // incrementamos el contador de swaps
                 swaps++;
             }
 
+            // incrementamos el contador de comparaciones
             comparisons++;
         }
     }
@@ -23,18 +31,27 @@ void swapSort(vector<T> &list, long long &comparisons, long long &swaps) {
 
 template <typename T>
 void bubbleSort(vector<T> &list, long long &comparisons, long long &swaps) {
+    // creamos una variable booleana para controlar si hubo cambios en la iteración
     bool change = true;
 
+    // iteramos desde el final de la lista hasta el principio, mientras haya cambios
     for (int i = list.size() - 1; i > 0 && change; i--) {
+        // reiniciamos la variable de cambios a false
         change = false;
 
+        // iteramos desde el principio de la lista hasta el índice i
         for (int j = 0; j < i; j++) {
+            // comparamos el valor de j contra j + 1
             if (list[j] > list[j + 1]) {
+                // si es mayor, los intercambiamos y marcamos que hubo un cambio
                 change = true;
                 swap(list[j], list[j + 1]);
+
+                // incrementamos el contador de swaps
                 swaps++;
             }
 
+            // incrementamos el contador de comparaciones
             comparisons++;
         }
     }
@@ -56,6 +73,7 @@ void selectionSort(vector<T> &list, long long &comparisons, long long &swaps) {
                 min = j;
             }
 
+            // incrementamos el contador de comparaciones
             comparisons++;
         }
 
@@ -63,6 +81,8 @@ void selectionSort(vector<T> &list, long long &comparisons, long long &swaps) {
         // si min es diferente a i
         if (min != i) {
             swap(list[i], list[min]);
+
+            // incrementamos el contador de swaps
             swaps++;
         }
     }
@@ -80,9 +100,12 @@ void insertionSort(vector<T> &list, long long &comparisons, long long &swaps) {
                 // si es menor, 
                 // los intercambiamos
                 swap(list[j - 1], list[j]);
+
+                // incrementamos el contador de swaps
                 swaps++;
             }
 
+            // incrementamos el contador de comparaciones
             comparisons++;
         }
     }
@@ -256,6 +279,7 @@ string monthValues(string month) {
     };
     return convert[month];
 };
+
 
 int main() {
 
