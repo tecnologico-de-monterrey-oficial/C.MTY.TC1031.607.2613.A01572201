@@ -280,6 +280,39 @@ string monthValues(string month) {
     return convert[month];
 };
 
+template <typename T>
+void binarySearch(vector<T> &list, T aux, bool inicio) {
+    // creamos dos variables para el inicio y el final de la lista
+    int left = 0;
+    int right = list.size() - 1;
+
+    // iteramos mientras left sea menor o igual a right
+    while (left <= right) {
+        // calculamos el mid
+        int mid = left + (right - left) / 2;
+        T currentValue = list[mid];
+        
+        // comparamos el valor de currentValue con aux
+        if (currentValue.key == aux.key) {
+            // si es igual, retornamos mid
+            return mid;
+        } else if (currentValue.key < aux.key) {
+            // si es menor, actualizamos left a mid + 1
+            left = mid + 1;
+        } else {
+            // si es mayor, actualizamos right a mid - 1
+            right = mid - 1;
+        }
+
+        // si inicio es true, retornamos el valor en left
+        if (inicio) {
+            return list[left];
+        } else {
+            // si inicio es false, retornamos el valor en right
+            return list[right];
+        }
+    }
+}
 
 int main() {
 
