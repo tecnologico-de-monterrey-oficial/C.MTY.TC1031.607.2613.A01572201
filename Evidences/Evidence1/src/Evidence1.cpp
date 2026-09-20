@@ -348,5 +348,39 @@ void generateFile(string fileName, vector<Log> &list, int start, int end) {
 }
 
 int main() {
+    // variables
+    int left, right, option;
+    bool sorted = false;
+    auto startTime = chrono::high_resolution_clock::now();
+    auto endTime = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+    // variables para guardar los datos de los logs
+    Log tempLog, startLog, endLog;
+
+    // creamos los vectores de logs
+    vector<Log> logs, logsUnsorted, logsRange;
+
+    // pedimos al usuario que ingrese el nombre del archivo a usar
+    cout << "Cual es el nombre del archivo que desea usar? (inserte el numero)" << endl;
+    cout << "1. log607-1.txt" << endl;
+    cout << "2. log607-2.txt" << endl;
+    cin >> option;
+
+    // validamos que la opción sea 1 o 2
+    while (option != 1 && option != 2) {
+        cout << "Opcion invalida, intente de nuevo" << endl;
+        cin >> option;
+    }
+
+    if (option == 1) {
+        // abrimos el archivo log607-1.txt
+        ifstream inputFile("log607-1.txt");
+    } else if (option == 2) {
+        // abrimos el archivo log607-2.txt
+        ifstream inputFile("log607-2.txt");
+    } 
+
+
 
 }
