@@ -376,11 +376,24 @@ int main() {
     if (option == 1) {
         // abrimos el archivo log607-1.txt
         ifstream inputFile("log607-1.txt");
+
+        // validamos que el archivo se haya abierto correctamente
+        if (!inputFile.is_open()) {
+            cout << "Error al abrir el archivo" << endl;
+            return 1;
+        }
     } else if (option == 2) {
         // abrimos el archivo log607-2.txt
         ifstream inputFile("log607-2.txt");
+
+        // validamos que el archivo se haya abierto correctamente
+        if (!inputFile.is_open()) {
+            cout << "Error al abrir el archivo" << endl;
+            return 1;
+        }
     } 
 
-
+    // nombre de los archivos de salida
+    string outputFile = "output608.txt", rangeFile = "range607.txt";
 
 }
