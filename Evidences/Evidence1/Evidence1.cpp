@@ -320,8 +320,31 @@ void printLogs(vector<Log> &list, int start, int end) {
        // imprimimos el log en la posición i
        cout << list[i].log << endl;
     }
-    
+
   cout << endl;  
+}
+
+void generateFile(string fileName, vector<Log> &list, int start, int end) {
+    // creamos un archivo con el nombre fileName
+    ofstream file(fileName);
+
+    // abrimos el archivo en modo escritura y truncado
+    file.open(fileName, ofstream::out | fstream::trunc);
+
+    // si el archivo se abrió correctamente, escribimos los logs en el archivo
+    if (file.is_open()) {
+        // iteramos desde start hasta end
+        for (int i = start; i <= end; i++) {
+            // escribimos el log en la posición i en el archivo
+            file << list[i].log << endl;
+        }
+    } else {
+        // si el archivo no se abrió correctamente, imprimimos un mensaje de error
+        cout << "Error al abrir el archivo" << endl;
+    }
+
+    // cerramos el archivo
+    file.close();
 }
 
 int main() {
