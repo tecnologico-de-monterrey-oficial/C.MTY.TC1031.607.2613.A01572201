@@ -50,7 +50,7 @@ template <typename T>
 void selectionSort(vector<T> &list) {
     // iteramos toda la lista, de principio a 1 antes del final
     for (int i = 0; i < list.size() - 1; i++) {
-        // hacemos el índice de la posión i como el más chico
+        // hacemos el índice de la posicion i como el más chico
             int min = i;
 
         // iteramos desde el siguiente índice hasta el final
@@ -76,7 +76,7 @@ void insertionSort(vector<T> &list) {
     // iteramos la lista desde la segunda posición hasta el final
     for (int i = 1; i < list.size(); i++) {
 
-        // iteramos desde el índice i hasta 0
+        // iteramos desde el índice i hasta 1 mayor a 0
         for (int j = i; j > 0; j--) {
            //comparamos el valor de j contra j - 1
             if (list[j] < list[j - 1]) {
@@ -262,36 +262,40 @@ int binarySearch(vector<T> &list, T aux, bool inicio) {
     // creamos dos variables para el inicio y el final de la lista
     int left = 0;
     int right = list.size() - 1;
+    int mid = left + (right - left) / 2;
+
+    string targetKey = aux.key.substr(0, 14);
 
     // iteramos mientras left sea menor o igual a right
     while (left <= right) {
         // calculamos el mid y obtenemos el valor en la posición mid
-        int mid = left + (right - left) / 2;
-        T currentValue = list[mid];
+        mid = left + (right - left) / 2;
+        string currentKey = list[mid].key.substr(0, 14);
         
-        // comparamos el valor de currentValue con aux
-        if (currentValue.key == aux.key) {
+        // comparamos el valor de currentKey con targetKey
+        if (currentKey == targetKey) {
             // si es igual, retornamos mid
             return mid;
-        } else if (currentValue.key < aux.key) {
+        } else if (currentKey < targetKey) {
             // si es menor, actualizamos left a mid + 1
             left = mid + 1;
         } else {
             // si es mayor, actualizamos right a mid - 1
             right = mid - 1;
         }
+    }
 
-        // si inicio es true, retornamos el valor en left
-        if (inicio) {
-            return list[left];
-        } else {
-            // si inicio es false, retornamos el valor en right
-            return list[right];
-        }
+    // si inicio es true, retornamos max(0, left)
+    if (inicio) {
+        return max(0, left);
+    } else {
+        int hold = list.size();
+    // si inicio es false, retornamos min(hold-1, right)
+        return min(hold-1, right);
     }
 }
 
-void printLogs(vector<Log> &list, int start, int end) {
+/*void printLogs(vector<Log> &list, int start, int end) {
     // iteramos desde start hasta end
     for (int i = start; i <= end; i++) {
        // imprimimos el log en la posición i
@@ -299,7 +303,7 @@ void printLogs(vector<Log> &list, int start, int end) {
     }
 
   cout << endl;  
-}
+}*/
 
 void generateFile(string fileName, vector<Log> &list, int start, int end) {
     // creamos un archivo con el nombre fileName
@@ -330,14 +334,21 @@ int main() {
     bool sorted = false;
     auto startTime = chrono::high_resolution_clock::now();
     auto endTime = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
     string line;
+    string fileUsed;
 
     // variables para guardar los datos de los logs
     Log tempLog, startLog, endLog;
 
     // creamos los vectores de logs
     vector<Log> logs, logsUnsorted, logsRange;
+
+    // inicializamos la lectura del archivo
+    ifstream inputFile;
+
+    // nombre de los archivos de salida
+    string outputFile = "output608.txt", rangeFile = "range607.txt";
 
     // pedimos al usuario que ingrese el nombre del archivo a usar
     cout << "Cual es el nombre del archivo que desea usar? (inserte el numero)" << endl;
@@ -351,14 +362,14 @@ int main() {
         cin >> option;
     }
 
-    ifstream inputFile;
-
     if (option == 1) {
         // abrimos el archivo log607-1.txt
         inputFile.open("../data/log607-1.txt");
+        fileUsed = "log607-1.txt";
     } else if (option == 2) {
         // abrimos el archivo log607-2.txt
         inputFile.open("../data/log607-2.txt");
+        fileUsed = "log607-2.txt";
     } 
 
     // validamos que el archivo se haya abierto correctamente
@@ -366,9 +377,6 @@ int main() {
             cout << "Error al abrir el archivo" << endl;
             return 1;
         }
-
-    // nombre de los archivos de salida
-    string outputFile = "output608.txt", rangeFile = "range607.txt";
 
     while (getline(inputFile, line)) {
         // creamos un stringstream con la línea leída
@@ -385,10 +393,21 @@ int main() {
         logs.push_back(tempLog);
     }
 
+    // creamos una copia de respaldo desordenada
     logsUnsorted = logs;
 
+    // variables exclusivas para búsqueda binaria y predicción del usuario
+    int startIndex;
+    int endIndex;
+    bool repeat = false;
+    string prediction;
+    vector<Log> duplicados;
+    int predictionMs;
+    int predictionDif;
+    
+    // inicializamos opción para arrancar el ciclo del menú principal
     option = -1;
-    // validamos que la opción este disponible
+    // validamos que la opción este disponible y sea distinta a salida (0)
     while (option != 0) {
 
         cout << "Que accion desea realizar?" << endl;
@@ -400,77 +419,540 @@ int main() {
         cout << "5. Usar Quick Sort" << endl;
         cout << "6. Usar Merge Sort" << endl;
         cout << "7. Usar Shell Sort" << endl;
-        cout << "8. Establecer rango de busqueda" << endl;
-        cout << "9. Buscar rango de busqueda" << endl;
+        cout << "8. Busqueda por rango (output608.txt)" << endl;
+        cout << "9. Cambiar de Archivo" << endl;
         cin >> option;
 
         switch (option) {
             case 0:
+                // terminamos la ejecución
                 cout << "Saliendo del programa..." << endl;
                 return 0;
             case 1:
+                // restauramos el vector a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
+
+                cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
+                cin >> predictionMs;
+
+                cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
                 swapSort(logs);
                 endTime = chrono::high_resolution_clock::now();
-                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
                 sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                // preparamos e imprimimos la información detallada de la corrida
+                predictionDif = abs((int)duration - predictionMs);
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Swap Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: O(n^2)" << endl;
+                cout << "Tu prediccion: " << predictionMs << endl;
+                cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
+                cout << "------------------\n" << endl;
+
+                /*
+                for(auto s : logs){
+                    cout << s.log << endl;
+                }
+                */
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
                 break;
+                
             case 2:
+                // restauramos el vector a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
+
+                cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
+                cin >> predictionMs;
+
+                cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
                 bubbleSort(logs);
                 endTime = chrono::high_resolution_clock::now();
-                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+
                 sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                /*
+                for(auto s : logs){
+                    cout << s.log << endl;
+                }
+                */
+
+                // preparamos e imprimimos la información detallada de la corrida
+                predictionDif = abs((int)duration - predictionMs);
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Bubble Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: O(n^2)" << endl;
+                cout << "Tu prediccion: " << predictionMs << endl;
+                cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
+                cout << "------------------\n" << endl;
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
                 break;
+
             case 3:
+                // restauramos el vector a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
+
+                cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
+                cin >> predictionMs;
+
+                cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
                 selectionSort(logs);
                 endTime = chrono::high_resolution_clock::now();
-                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
                 sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                /*
+                for(auto s : logs){
+                    cout << s.log << endl;
+                }
+                */
+
+                // preparamos e imprimimos la información detallada de la corrida
+                predictionDif = abs((int)duration - predictionMs);
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Selection Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: O(n^2)" << endl;
+                cout << "Tu prediccion: " << predictionMs << endl;
+                cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
+                cout << "------------------\n" << endl;
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
                 break;
             case 4:
+                // restauramos el vector a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
+
+                cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
+                cin >> predictionMs;
+
+                cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
                 insertionSort(logs);
                 endTime = chrono::high_resolution_clock::now();
-                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
                 sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                /*
+                for(auto s : logs){
+                    cout << s.log << endl;
+                }
+                */
+
+                // preparamos e imprimimos la información detallada de la corrida
+                predictionDif = abs((int)duration - predictionMs);
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Insertion Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: O(n^2)" << endl;
+                cout << "Tu prediccion: " << predictionMs << endl;
+                cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
+                cout << "------------------\n" << endl;
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
                 break;
             case 5:
+                // restauramos el vector a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
+
+                cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
+                cin >> predictionMs;
+
+                cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
                 quickSort(logs, 0, logs.size() - 1);
                 endTime = chrono::high_resolution_clock::now();
-                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
                 sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                /*
+                for(auto s : logs){
+                    cout << s.log << endl;
+                }
+                */
+
+                // preparamos e imprimimos la información detallada de la corrida
+                predictionDif = abs((int)duration - predictionMs);
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Quick Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: O(n log n)" << endl;
+                cout << "Tu prediccion: " << predictionMs << endl;
+                cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
+                cout << "------------------\n" << endl;
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
                 break;
             case 6: 
+                // restauramos el vector a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
+
+                cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
+                cin >> predictionMs;
+
+                cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
                 mergeSort(logs, 0, logs.size() - 1);
                 endTime = chrono::high_resolution_clock::now();
-                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
                 sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                /*
+                for(auto s : logs){
+                    cout << s.log << endl;
+                }
+                */
+
+                // preparamos e imprimimos la información detallada de la corrida
+                predictionDif = abs((int)duration - predictionMs);
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Merge Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: O(n log n)" << endl;
+                cout << "Tu prediccion: " << predictionMs << endl;
+                cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
+                cout << "------------------\n" << endl;
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
                 break;
             case 7: 
+                // restauramos el vector a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
+
+                cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
+                cin >> predictionMs;
+
+                cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
                 shellSort(logs);
                 endTime = chrono::high_resolution_clock::now();
-                duration = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
                 sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                /*
+                for(auto s : logs){
+                    cout << s.log << endl;
+                }
+                */
+
+                // preparamos e imprimimos la información detallada de la corrida
+                predictionDif = abs((int)duration - predictionMs);
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Shell Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: O(n log n) a O(n^1.5)" << endl;
+                cout << "Tu prediccion: " << predictionMs << endl;
+                cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
+                cout << "------------------\n" << endl;
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
+                break;
+            case 8:
+                // reiniciamos el control de variables para buscar duplicados
+                duplicados.clear();
+                repeat = false;
+
+                // la busqueda binaria solo funciona con vectores previamente ordenados
+                if (!sorted) {
+                    cout << "\nEl vector necesita estar sorteado para implementar busqueda binaria.\n\n";
+                    break;
+                }
+
+                // vaciamos el vector de rangos en caso de que contenga búsquedas pasadas
+                if (!logsRange.empty()) {
+                    logsRange.clear();
+                }
+
+                // capturamos la fecha de inicio del usuario
+                cout << "Inserte la fecha de inicio (DD MM YYYY):" << endl;
+                cin >> startLog.day >> startLog.month >> startLog.year;
+
+                // capturamos la hora de inicio del usuario
+                cout << "Inserte la hora de inicio (hr:min:sec):" << endl;
+                cin >> startLog.time;
+
+                // creamos la clave del objeto de inicio a partir de las entradas
+                startLog.key = startLog.createKey(startLog.year, startLog.month, startLog.day, startLog.arrangeTime(startLog.time), "0");
+
+                // capturamos la fecha final del usuario
+                cout << "Inserte la fecha final (DD MM YYYY):" << endl;
+                cin >> endLog.day >> endLog.month >> endLog.year;
+
+                // capturamos la hora final del usuario
+                cout << "Inserte la hora final (hr:min:sec):" << endl;
+                cin >> endLog.time;
+
+                // creamos la clave del objeto de cierre a partir de las entradas
+                endLog.key = endLog.createKey(endLog.year, endLog.month, endLog.day, endLog.arrangeTime(endLog.time), "0");
+
+                // realizamos búsqueda binaria del index inicial y del index final
+                startIndex = binarySearch(logs, startLog, true);
+                endIndex = binarySearch(logs, endLog, false);
+
+                // imprimimos datos para validación de la búsqueda
+                /*cout << "StartKey: " << startLog.key << " EndKey: " << endLog.key << endl;
+                cout << "Start: " << startIndex << " End: " << endIndex << endl;
+                cout << "StartTime: " << startLog.time << "EndTime: " << endLog.time << endl;*/
+
+                // ajustamos startIndex retrocediendo en caso de encontrar timestamps idénticos colindantes
+                if(startIndex > 0){
+                    while (startIndex > 0 && logs[startIndex].key.substr(0, 14) == logs[startIndex - 1].key.substr(0, 14)) {
+                        repeat = true;
+                        startIndex -= 1;
+                        duplicados.push_back(logs[startIndex]);
+                    }
+                }
+                
+                // ajustamos endIndex avanzando en caso de encontrar timestamps idénticos colindantes
+                if(endIndex < logs.size() - 1){
+                    while (endIndex < logs.size() - 1 && logs[endIndex].key.substr(0, 14) == logs[endIndex + 1].key.substr(0, 14)) {
+                        repeat = true;
+                        endIndex += 1;
+                        duplicados.push_back(logs[endIndex]);
+                    }
+                }
+
+                // ingresamos el valor inicial y el resto del rango al nuevo vector
+                logsRange.push_back(logs[startIndex]);
+                for (int i = startIndex + 1; i <= endIndex && i < logs.size(); i++) {
+                    logsRange.push_back(logs[i]);
+
+                    // detectamos si hay elementos idénticos en el resto de los elementos para guardarlos
+                    if (logsRange[i - startIndex].key.substr(0, 14) == logsRange[i - startIndex - 1].key.substr(0, 14)) {
+                        repeat = true;
+                        duplicados.push_back(logsRange[i - startIndex]);
+                    }
+                }
+
+                // notificamos al usuario la existencia de elementos idénticos si se encontraron
+                if (repeat) {
+                    cout << "Alerta de timestamp(s) duplicado(s). Se incluyen en el output todos los siguientes timestamps duplicados dentro del rango establecido en orden:\n\n";
+                    
+                    for(auto k : duplicados){
+                        cout << k.log << endl;
+                    }
+                }
+
+                // verificamos si la búsqueda entregó algún resultado
+                if(logsRange.empty()){
+                    cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+                    continue;
+                }
+
+                // imprimimos el resultado de los logs obtenidos
+                for(auto s : logsRange){
+                    cout << s.log << endl;
+                }
+
+                // generamos el documento range607.txt
+                generateFile(rangeFile, logsRange, 0, logsRange.size()-1);
+                cout << "\nSe ha guardado la informacion\n\n";
                 break;
 
-        }
+            case 9:
+                // regresamos los parámetros al estado por default y desordenado
+                logs = logsUnsorted;
+                sorted = false;
 
-        if(logs.empty()){
-            cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
-            continue;
-        }
+                // cerramos y limpiamos el flujo de lectura previo
+                inputFile.close();
+                inputFile.clear();
 
-        for(auto s : logs){
-             cout << s.log << endl;
-        }
+                // pedimos al usuario que ingrese el nombre del archivo a usar
+                cout << "Cual es el nombre del archivo que desea usar? (inserte el numero)" << endl;
+                cout << "1. log607-1.txt" << endl;
+                cout << "2. log607-2.txt" << endl;
+                cin >> option;
 
-        generateFile(outputFile, logs, 0, logs.size()-1);
-        cout << "\nSe ha guardado la informacion\n\n";
+                // validamos que la opción sea 1 o 2
+                while (option != 1 && option != 2) {
+                    cout << "Opcion invalida, intente de nuevo" << endl;
+                    cin >> option;
+                }
+
+                if (option == 1) {
+                    // abrimos el archivo log607-1.txt
+                    inputFile.open("../data/log607-1.txt");
+                    fileUsed = "log607-1.txt";
+                } else if (option == 2) {
+                    // abrimos el archivo log607-2.txt
+                    inputFile.open("../data/log607-2.txt");
+                    fileUsed = "log607-2.txt";
+                } 
+
+                // validamos que el archivo se haya abierto correctamente
+                    if (!inputFile.is_open()) {
+                        cout << "Error al abrir el archivo" << endl;
+                        return 1;
+                    }
+
+                // limpiamos los vectores antes de rellenar con datos nuevos
+                logs.clear();
+
+                while (getline(inputFile, line)) {
+                    // creamos un stringstream con la línea leída
+                    stringstream stream(line);
+
+                    // guardamos los datos de la línea en un log temporal
+                    tempLog.log = line;
+                    stream >> tempLog.month >> tempLog.day >> tempLog.year >> tempLog.time >> tempLog.ip;
+
+                    // creamos la clave única del log
+                    tempLog.key = tempLog.createKey(tempLog.year, monthValues(tempLog.month), tempLog.day, tempLog.arrangeTime(tempLog.time), tempLog.arrangeIp(tempLog.ip));
+
+                    // agregamos el log temporal al vector de logs
+                    logs.push_back(tempLog);
+                }
+
+                // guardamos la nueva configuración desordenada por default
+                logsUnsorted = logs;
+                break;
+
+            default:
+                cout << "\nElige una opcion valida\n\n";
+                option = -1;
+                break;
+        }
     }
-    
 }

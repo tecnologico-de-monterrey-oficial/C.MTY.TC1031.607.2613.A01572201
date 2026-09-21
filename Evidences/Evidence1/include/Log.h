@@ -10,8 +10,8 @@
 #include <fstream>
 #include <vector>
 #include <map>
-#include <queue>
 #include <chrono> 
+#include <algorithm>
 using namespace std;
 
 struct Log {
@@ -24,7 +24,7 @@ struct Log {
     string log;
     string key;
 
-    // Constructores
+    // Constructor
     Log() {
         year = "";
         month = "";
@@ -34,14 +34,6 @@ struct Log {
         log = "";
         key = "";
     };
-
-    Log(int year, string month, int day, string time, string ip) {
-        this->year = to_string(year);
-        this->month = month;
-        this->day = to_string(day);
-        this->time = time;
-        this->ip = ip;
-    }; 
 
     // Métodos
     // Método para arreglar la IP agregando ceros a la izquierda

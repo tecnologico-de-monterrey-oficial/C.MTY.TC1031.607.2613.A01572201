@@ -1,0 +1,1 @@
+cout << "Tamano del vector: " << logs.size() << " elementos" << endl;
