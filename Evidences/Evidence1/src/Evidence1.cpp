@@ -865,6 +865,12 @@ int main() {
                     }
                 }
 
+                // imprimimos el resultado de los logs obtenidos
+                for(auto s : logsRange){
+                    cout << s.log << endl;
+                }
+    
+
                 // notificamos al usuario la existencia de elementos idénticos si se encontraron
                 if (repeat) {
                     cout << "Alerta de timestamp(s) duplicado(s). Se incluyen en el output todos los siguientes timestamps duplicados dentro del rango establecido en orden:\n\n";
@@ -878,11 +884,6 @@ int main() {
                 if(logsRange.empty()){
                     cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
                     continue;
-                }
-
-                // imprimimos el resultado de los logs obtenidos
-                for(auto s : logsRange){
-                    cout << s.log << endl;
                 }
 
                 // generamos el documento range607.txt
