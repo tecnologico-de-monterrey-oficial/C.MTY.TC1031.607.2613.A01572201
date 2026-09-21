@@ -19,10 +19,7 @@ Se requiere un compilador de C++ compatible con las librerías utilizadas (como 
 ## Instalación y Ejecución
 1. Clona o descarga los archivos sin cambiar sus nombres o su estructura
 2. Abre tu terminal en el directorio del código fuente (/src).
-3. Compila el archivo:
-
-   g++ -o EvidenceRunner Evidence1.cpp
-
+3. Compila el archivo
 4. Ejecuta el programa generado:
 
    ./EvidenceRunner
