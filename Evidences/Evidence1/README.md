@@ -42,4 +42,5 @@ Se le pedirá al usuario que realice una predicción del rendimiento en tiempo d
 Una vez que uno de los archivos de prueba haya sido ordenado por algún algoritmo de ordenamiento, se puede utilizar la opción de Búsqueda por Rango en el menú presentado al usuario. Para utilizar la búsqueda binaria, se pedirá una fecha/hora de inicio y una fecha/hora de fin, con lo cual la búsqueda binaria localizará rápidamente los índices correspondientes y se creará un documento ordenado con los logs dentro del rango solicitado. También, se le informará y presentará al usuario si en el documento hay timestamps idénticos dentro del rango solicitado.
 
 ## Video explicativo breve 
+https://youtu.be/Kkfz7WmnFxc
 
