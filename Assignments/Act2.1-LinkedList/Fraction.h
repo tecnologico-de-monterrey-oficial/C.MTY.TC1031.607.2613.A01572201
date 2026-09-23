@@ -1,21 +1,40 @@
 // Daniel Gómez Guerrero
 // A01572201
 
-#ifndef FRACTION_H
-#define FRACTION_H
+#ifndef Fraction_h
+#define Fraction_h
 
 #include <iostream>
-
+// define una clase fracción básica
 class Fraction {
 private:
     int numerator;
     int denominator;
 public:
-    Fraction(int numerator, int denominator) : numerator(numerator), denominator(denominator) {}
+    Fraction() : numerator(0), denominator(1) {}
+    Fraction(int num, int den) : numerator(num), denominator(den) {}
+
+    int getNumerator() const {
+        return numerator;
+    }
+
+    int getDenominator() const {
+        return denominator;
+    }
+
+    void setNumerator(int num) {
+        numerator = num;
+    }
+
+    void setDenominator(int den) {
+        denominator = den;
+    }
 
     void print() const {
         std::cout << numerator << "/" << denominator << std::endl;
-    }
+    }   
+
+    
 };
 
-#endif // FRACTION_H
+#endif /* Fraction_h */
