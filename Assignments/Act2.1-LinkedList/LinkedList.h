@@ -19,6 +19,13 @@ class LinkedList {
     void print();
     void insert(int index, T data);
     void deleteData(T data);
+    void deletaAt(int index);
+    void getData(int index);
+    void updateData(T data, T newData);
+    void updateAt(int index, T newData);
+    void findData(T data);
+    bool operator[](int index);
+    bool operator=(const LinkedList &other);
 };
 
 template <typename T>
