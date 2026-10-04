@@ -20,7 +20,7 @@ class LinkedList {
     void insert(int index, T data);
     void deleteData(T data);
     void deletaAt(int index);
-    void getData(int index);
+    T getData(int index);
     void updateData(T data, T newData);
     void updateAt(int index, T newData);
     void findData(T data);
@@ -125,6 +125,8 @@ void LinkedList<T>::deleteData(T data) {
             delete aux;
             // decrementamos sixe
             size--;
+            // return
+            return;
         } else {
             // creamos un elemento auxPrev igual a head
             Node<T>* auxPrev = head;
@@ -134,25 +136,104 @@ void LinkedList<T>::deleteData(T data) {
             while (aux != nullptr) {
                 // validamos si el valor de aux es el que quiero borrar
                 if (aux->data == data) {
-                    //
+                    // recorremos auxPrev->next a aux->next
                     auxPrev->next = aux->next;
                     // borro aux
                     delete aux;
                     // decrementamos size
                     size--;
                     // return
+                    return;
                 }
                 // recorrer los apuntadores
                 auxPrev = aux;
                 aux = aux->next;
             }
             // no lo encontre
-            throw out_of_range("No se encontro el dato a borrar")
-        } else {
-            throw out_of_range("La lista esta vacia")
-        }
+            throw out_of_range("No se encontro el dato a borrar");
+        } 
+    } else {
+        throw out_of_range("La lista esta vacia");
     }
 }
+
+template <typename T>
+void LinkedList<T>::deletaAt(int index) {
+    // validamos que la lista no este vacia
+    if (head != nullptr) {
+        // validamos que la posicion exista
+        if (index >= 0 && index < size) {
+            // valido si el primer elemento es el que quiero borrar
+            if (index == 0) {
+                // quiero borrar el primer elemento
+                // creamos un elemento aux igual a head
+                Node<T>* aux = head;
+                // recorremos head a head->next
+                head = head->next;
+                // borramos el primer elemento
+                delete aux;
+                // decrementamos sixe
+                size--;
+                // return
+                return;
+            } else {
+                 // creamos un elemento auxPrev igual a head
+                Node<T>* auxPrev = head;
+                // recorremos hasta llegar al nodo anterior al que queremos borrar
+                for (int i = 0; i < index - 1; i++) {
+                    auxPrev = auxPrev->next;
+                }
+                // creamos un elemento aux igual a auxPrev->next
+                Node<T>* aux = auxPrev->next;
+                // recorremos auxPrev->next a aux->next
+                auxPrev->next = aux->next;
+                 // borramos aux
+                delete aux;
+                // decrementamos sixe
+                size--;
+                // return
+                return;
+            }
+        } else {
+            // error
+            throw out_of_range("La posicion no existe en la lista");
+        }
+    } else {
+        throw out_of_range("La lista esta vacia");
+    }
+}
+
+template <typename T>
+T LinkedList<T>::getData(int index) {
+    // validamos que la lista no este vacia
+    if (head != nullptr) {
+        // validamos que la posicion exista
+        if (index >= 0 && index < size) {
+            // creamos un elemento aux igual a head
+            Node<T>* aux = head;
+            // recorremos hasta llegar al nodo que se desea consultar
+            for (int i = 0; i < index; i++) {
+                aux = aux->next;
+            }
+            return aux->data;
+        } else {
+            // error
+            throw out_of_range("La posicion no existe en la lista"); 
+        }
+    } else {
+        throw out_of_range("La lista esta vacia");
+    }
+}
+
+template <typename T>
+void LinkedList<T>::updateData(T data, T newData) {
+    // validamos que la lista no este vacia
+    if (head != nullptr) {
+
+    } else {
+        throw out_of_range("La lista esta vacia");
+    }
+};
 
 
 #endif /* LinkedList_h */
