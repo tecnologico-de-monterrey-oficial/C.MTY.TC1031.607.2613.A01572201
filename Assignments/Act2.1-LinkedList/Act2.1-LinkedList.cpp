@@ -276,6 +276,7 @@ void startMenu() {
                 break;
             
             case 13:
+                list2 = LinkedList<T>();
                 createList(list2);
                 cout << "\nLista auxiliar:\n";
                 list2.print();

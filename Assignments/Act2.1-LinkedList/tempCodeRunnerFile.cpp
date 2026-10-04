@@ -1,1 +1,1 @@
-push_front
+Crear/rehacer lista auxiliar
