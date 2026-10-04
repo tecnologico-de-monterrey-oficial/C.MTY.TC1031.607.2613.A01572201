@@ -229,11 +229,67 @@ template <typename T>
 void LinkedList<T>::updateData(T data, T newData) {
     // validamos que la lista no este vacia
     if (head != nullptr) {
-
+        // la lista no esta vacia
+        // valido si el primer elemento es el que quiero actualizar
+        if (head->data == data) {
+            // quiero actualizar el primer elemento
+            head->data = newData;
+        } else {
+            // creamos un elemento aux igual a head->next
+            Node<T>* aux = head->next;
+            // recorremos la lista buscando el dato
+            while (aux != nullptr) {
+                // validamos si el valor de aux es el que quiero actualizar
+                if (aux->data == data) {
+                    // actualizamos el valor de aux
+                    aux->data = newData;
+                    // return
+                    return;
+                }
+                // recorremos aux
+                aux = aux->next;
+            }
+            // no lo encontre
+            throw out_of_range("No se encontro el dato a actualizar");
+        }
     } else {
         throw out_of_range("La lista esta vacia");
     }
 };
+
+template <typename T>
+void LinkedList<T>::updateAt(int index, T newData) {
+    // validamos que la lista no este vacia
+    if (head != nullptr) {
+        // validamos que la posicion exista
+        if (index >= 0 && index < size) {
+            // valido si el primer elemento es el que quiero actualizar
+            if (index == 0) {
+                // quiero actualizar el primer elemento
+                head->data = newData;
+                // return
+                return;
+            } else {
+                 // creamos un elemento aux igual a head->next
+                Node<T>* aux = head->next;
+                // recorremos hasta llegar al nodo al que queremos actualizar
+                for (int i = 0; i < index - 1; i++) {
+                    // recorremos aux
+                    aux = aux->next;
+                }
+                // actualizamos aux
+                aux->data = newData;
+                // return
+                return;
+            }
+        } else {
+            // error
+            throw out_of_range("La posicion no existe en la lista");
+        }
+    } else {
+        throw out_of_range("La lista esta vacia");
+    }
+}
 
 
 #endif /* LinkedList_h */
