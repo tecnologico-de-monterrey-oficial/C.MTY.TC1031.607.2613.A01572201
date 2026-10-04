@@ -1,1 +1,0 @@
-Crear/rehacer lista auxiliar
