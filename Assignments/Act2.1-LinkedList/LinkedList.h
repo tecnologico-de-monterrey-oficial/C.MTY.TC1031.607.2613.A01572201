@@ -6,6 +6,7 @@
 
 #include "Node.h"
 #include <iostream>
+#include <stdexcept>
 using namespace std;
 
 template <typename T>
@@ -21,7 +22,7 @@ class LinkedList {
         void print();
         void insert(int index, T data);
         bool deleteData(T data);
-        bool deletaAt(int index);
+        bool deleteAt(int index);
         T getData(int index);
         void updateData(T data, T newData);
         void updateAt(int index, T newData);
@@ -41,6 +42,8 @@ void LinkedList<T>::push_front(T data) {
     // actualizo head
     // head = std::move(node);
     head = node;
+    // incrementamos size
+    size++;
 };
 
 template <typename T>
@@ -103,7 +106,7 @@ void LinkedList<T>::insert(int index, T data) {
         size++;
     } else {
         // error
-        throw out_of_range("La posicion no existe en la lista")
+        throw out_of_range("La posicion no existe en la lista");
     }
 }
 
@@ -162,7 +165,7 @@ bool LinkedList<T>::deleteData(T data) {
 }
 
 template <typename T>
-bool LinkedList<T>::deletaAt(int index) {
+bool LinkedList<T>::deleteAt(int index) {
     // validamos que la lista no este vacia
     if (head != nullptr) {
         // validamos que la posicion exista
