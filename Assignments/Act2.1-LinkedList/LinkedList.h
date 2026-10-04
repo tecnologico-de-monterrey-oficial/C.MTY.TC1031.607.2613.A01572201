@@ -26,8 +26,8 @@ class LinkedList {
         void updateData(T data, T newData);
         void updateAt(int index, T newData);
         int findData(T data);
-        bool operator[](int index);
-        bool operator=(const LinkedList &other);
+        T& operator[](int index);
+        LinkedList& operator=(const LinkedList<T> &other);
 };
 
 template <typename T>
@@ -107,10 +107,10 @@ void LinkedList<T>::insert(int index, T data) {
     }
 }
 
-    // si la lista esta vacia
-    // si la lista no tiene elemento x
-    // si quiero eliminar primer elemento
-    // si quiero eliminar cualquier otro elem
+// si la lista esta vacia
+// si la lista no tiene elemento x
+// si quiero eliminar primer elemento
+// si quiero eliminar cualquier otro elem
 template <typename T>
 void LinkedList<T>::deleteData(T data) {
     // validamos que la lista no este vacia
@@ -319,6 +319,66 @@ int LinkedList<T>::findData(T data) {
     } else {
         throw out_of_range("La lista esta vacia");
     }
+}
+
+template <typename T>
+T& LinkedList<T>::operator[](int index) {
+    // validamos que la lista no este vacia
+    if (head != nullptr) {
+        // validamos que la posicion exista
+        if (index >= 0 && index < size) {
+            // creamos un elemento aux igual a head
+            Node<T>* aux = head;
+            // recorremos hasta llegar al nodo que se desea consultar
+            for (int i = 0; i < index; i++) {
+                // recorremos aux
+                aux = aux->next;
+            }
+            return aux->data;
+        } else {
+            // error
+            throw out_of_range("La posicion no existe en la lista"); 
+        }
+    } else {
+        throw out_of_range("La lista esta vacia");
+    }
+}
+
+template <typename T>
+LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T> &other) {
+    // validamos si las listas son iguales
+    if (this == &other) {
+        // retornamos el objeto sin cambios
+        return *this;
+    }
+
+    // validamos que la lista no este vacia
+    if (head != nullptr) {
+        // borramos la lista actual
+        // recorremos la lista
+        while (head != nullptr) {
+            // creamos un elemento aux igual a head
+            Node<T>* aux = head;
+            // recorremos head a head->next
+            head = head->next;
+            // borramos aux
+            delete aux;
+        }
+    }
+    // copiamos la lista del otro objeto
+    // creamos un elemento aux igual al head de la otra lista
+    Node<T>* aux = other.head;
+    // recorremos la lista del otro objeto
+    while (aux != nullptr) {
+        // agregamos el valor de aux a la lista actual
+        this->push_back(aux->data);
+        // recorremos aux
+        aux = aux->next;
+    }
+    // Se copia el size de la otra lista
+    size = other.size;
+    // retornamos el objeto actual
+    return *this;
 }
 
 
