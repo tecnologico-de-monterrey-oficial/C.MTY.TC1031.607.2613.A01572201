@@ -5,27 +5,29 @@
 #define LinkedList_h
 
 #include "Node.h"
+#include <iostream>
+using namespace std;
 
 template <typename T>
 class LinkedList {
     private:
-    //std::unique_ptr< Node<T> > head;
-    Node<T>* head;
-    int size;
+        //std::unique_ptr< Node<T> > head;
+        Node<T>* head;
+        int size;
     public:
-    LinkedList() : head(nullptr), size(0) {}
-    void push_front(T data);
-    void push_back(T data);
-    void print();
-    void insert(int index, T data);
-    void deleteData(T data);
-    void deletaAt(int index);
-    T getData(int index);
-    void updateData(T data, T newData);
-    void updateAt(int index, T newData);
-    void findData(T data);
-    bool operator[](int index);
-    bool operator=(const LinkedList &other);
+        LinkedList() : head(nullptr), size(0) {}
+        void push_front(T data);
+        void push_back(T data);
+        void print();
+        void insert(int index, T data);
+        void deleteData(T data);
+        void deletaAt(int index);
+        T getData(int index);
+        void updateData(T data, T newData);
+        void updateAt(int index, T newData);
+        int findData(T data);
+        bool operator[](int index);
+        bool operator=(const LinkedList &other);
 };
 
 template <typename T>
@@ -286,6 +288,34 @@ void LinkedList<T>::updateAt(int index, T newData) {
             // error
             throw out_of_range("La posicion no existe en la lista");
         }
+    } else {
+        throw out_of_range("La lista esta vacia");
+    }
+}
+
+template <typename T>
+int LinkedList<T>::findData(T data) {
+    // validamos que la lista no este vacia
+    if (head != nullptr) {
+        // creamos un elemento aux igual a head
+        Node<T>* aux = head;
+        // creamos un indice
+        int index = 0;
+        // recorremos hasta llegar al nodo con el dato deseado
+        while (aux != nullptr) {
+            // validamos si el valor de aux es el que quiero encontrar
+            if (aux->data == data) {
+                // return index
+                return index;
+            }
+            // recorremos aux
+            aux = aux->next;
+            // incrementamos index
+            index++;
+        }
+        // no lo encontre
+        // throw out_of_range("No se encontro el dato en la lista");
+        return -1;
     } else {
         throw out_of_range("La lista esta vacia");
     }
