@@ -8,4 +8,7 @@ using namespace std;
 struct Cliente {
     string nombre;
     int boletos;
+    friend ostream& operator<<(ostream& os, const Cliente& client) {
+        os << client.nombre << " (" << client.boletos << " boletos)";
+    }
 };

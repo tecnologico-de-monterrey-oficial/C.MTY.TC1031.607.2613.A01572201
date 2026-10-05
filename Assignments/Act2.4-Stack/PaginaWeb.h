@@ -8,4 +8,7 @@ using namespace std;
 struct PaginaWeb {
     string titulo;
     string url;
+    friend ostream& operator<<(ostream& os, const PaginaWeb& web) {
+        os << web.titulo << " (" << web.url << ")";
+    }
 };
