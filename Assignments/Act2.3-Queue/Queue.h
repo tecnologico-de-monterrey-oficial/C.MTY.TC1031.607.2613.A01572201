@@ -88,7 +88,7 @@ void Queue<T>::print() {
         cout << aux->data;
         aux = aux->next;
         if (aux != nullptr) {
-            cout << "-";
+            cout << " - ";
         }
     }
     cout << endl;

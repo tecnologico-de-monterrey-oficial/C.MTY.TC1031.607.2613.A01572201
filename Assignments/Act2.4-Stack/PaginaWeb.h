@@ -10,5 +10,6 @@ struct PaginaWeb {
     string url;
     friend ostream& operator<<(ostream& os, const PaginaWeb& web) {
         os << web.titulo << " (" << web.url << ")";
+        return os;
     }
 };

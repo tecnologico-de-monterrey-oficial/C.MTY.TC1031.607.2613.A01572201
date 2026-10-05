@@ -9,6 +9,7 @@ struct Cliente {
     string nombre;
     int boletos;
     friend ostream& operator<<(ostream& os, const Cliente& client) {
-        os << client.nombre << " (" << client.boletos << " boletos)";
+        os << client.nombre << " (" << client.boletos << " boleto(s))";
+        return os;
     }
 };
