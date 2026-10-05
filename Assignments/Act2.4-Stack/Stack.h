@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include "Node.h"
+#include <stdexcept>
 using namespace std;
 
 template <typename T>
@@ -16,7 +17,7 @@ class Stack {
         Stack() : head(nullptr) {}
         void pop();
         void push(T data);
-        void top();
+        T top();
         void print();
 };
 
@@ -26,12 +27,14 @@ void Stack<T>::pop() {
     if (head != nullptr) {
         // creamos un elemento aux igual a head
         Node<T>* aux = head;
+        // decimos que elemento se va a borrar
+        cout << "Borrando el elemento: " << aux->data << endl;
         // recorremos head a head->next
         head = head->next;
         // borramos el primer elemento
         delete aux;
     } else {
-        throw out_of_range("La lista esta vacia")
+        throw out_of_range("La lista esta vacia");
     }
 }
 
@@ -46,8 +49,14 @@ void Stack<T>::push(T data) {
 }
 
 template <typename T>
-void Stack<T>::top() {
-
+T Stack<T>::top() {
+    // validamos si la lista esta vacia
+    if (head != nullptr) {
+        // regresa el primer valor
+        return head->data;
+    } else {
+        throw out_of_range("La lista esta vacia");
+    }
 }
 
 template <typename T>

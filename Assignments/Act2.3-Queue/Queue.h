@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include "Node.h"
+#include <stdexcept>
 using namespace std;
 
 template <typename T>
@@ -17,7 +18,7 @@ class Queue {
         Queue() : head(nullptr), tail(nullptr) {}
         void pop();
         void push(T data);
-        void front();
+        T front();
         void print();
 };
 
@@ -29,20 +30,25 @@ void Queue<T>::pop() {
         if (head == tail) {
             // creamos un elemento aux igual a head
             Node<T>* aux = head;
+            // decimos que elemento se va a borrar
+            cout << "Borrando el elemento: " << aux->data << endl;
             // borramos aux
             delete aux;
             // inicializamos head y tail
             head = nullptr;
             tail = nullptr;
+        } else {
+            // creamos un elemento aux igual a head
+            Node<T>* aux = head;
+            // recorremos head a head->next
+            head = head->next;
+            // decimos que elemento se va a borrar
+            cout << "Borrando el elemento: " << aux->data << endl;
+            // borramos el primer elemento
+            delete aux;
         }
-        // creamos un elemento aux igual a head
-        Node<T>* aux = head;
-        // recorremos head a head->next
-        head = head->next;
-        // borramos el primer elemento
-        delete aux;
     } else {
-        throw out_of_range("La lista esta vacia")
+        throw out_of_range("La lista esta vacia");
     }
 }
 
@@ -63,11 +69,13 @@ void Queue<T>::push(T data) {
 }
 
 template <typename T>
-void Queue<T>::front() {
+T Queue<T>::front() {
     // validamos si la lista esta vacia
     if (head != nullptr) {
         // regresa el primer valor
-        return ;
+        return head->data;
+    } else {
+        throw out_of_range("La lista esta vacia");
     }
 }
 
