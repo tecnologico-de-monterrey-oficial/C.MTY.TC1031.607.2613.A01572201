@@ -120,9 +120,9 @@ void startMenu() {
         cout << "7. Actualizar un elemento dado de la lista\n";
         cout << "8. Actualizar un elemento que se encuentra en una posicion dada de la lista\n";
         cout << "9. Encontrar un elemento dado en la lista\n";
-        cout << "10. Obtener el elemento de una posicion de la lista (sobre cargo operador [ ])\n";
-        cout << "11. Actualizar el elemento de una posicion de la lista (sobre cargo operador [ ])\n";
-        cout << "12. Igualar una lista con los datos de otra lista (sobre carga operador =)\n";
+        cout << "10. Obtener el elemento de una posicion de la lista (sobrecargo operador [ ])\n";
+        cout << "11. Actualizar el elemento de una posicion de la lista (sobrecargo operador [ ])\n";
+        cout << "12. Igualar una lista con los datos de otra lista (sobrecargo operador =)\n";
         cout << "13. Crear/rehacer lista auxiliar\n";
         cin >> option;
         
@@ -305,10 +305,10 @@ int main() {
     }
 
     if (option1 == 1) {
-        // generamos las listas con datos enteros
+        // trabajamos con listas de datos enteros
         startMenu<int>(); 
     } else if (option1 == 2) {
-        // generamos las listas con datos float
+        // trabajamos con listas de datos float
         startMenu<float>(); 
     }
 
