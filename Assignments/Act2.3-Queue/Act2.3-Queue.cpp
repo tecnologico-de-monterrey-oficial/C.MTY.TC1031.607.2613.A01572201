@@ -84,7 +84,7 @@ int main() {
                 break;
 
             default:
-                cout << "Opcion desconocida" << endl;
+                cout << "\nOpcion desconocida\n" << endl;
                 break;
         }
     }
