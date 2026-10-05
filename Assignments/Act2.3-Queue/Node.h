@@ -1,3 +1,6 @@
+// Daniel Gómez Guerrero
+// A01572201
+
 #pragma once
 // #include <memory>
 
