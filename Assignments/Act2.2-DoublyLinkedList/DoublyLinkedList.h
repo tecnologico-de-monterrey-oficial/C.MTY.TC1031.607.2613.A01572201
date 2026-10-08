@@ -17,6 +17,8 @@ class DoublyLinkedList {
         int size = 0;
     public:
         DoublyLinkedList() : head(nullptr), tail(nullptr), size(0) {}
+        ~DoublyLinkedList() { clear(); }
+        void print();
         void addFirst(T data);
         void addLast(T data);
         void insert(int index, T data);
@@ -34,6 +36,21 @@ class DoublyLinkedList {
         void duplicate();
         void removeDuplicates();
 };
+
+template <typename T>
+void DoublyLinkedList<T>::print() {
+    // creamos un apuntador auxiliar que apunte a head
+    NodeD<T>* aux = head;
+    // recorremos la lista mientras aux sea diferente de nullptr
+    while (aux != nullptr) {
+        cout << aux->data;
+        aux = aux->next;
+        if (aux != nullptr) {
+            cout << "-";
+        }
+    }
+    cout << endl;
+}
 
 template <typename T>
 void DoublyLinkedList<T>::addFirst(T data) {
@@ -106,7 +123,7 @@ void DoublyLinkedList<T>::insert(int index, T data) {
                 auxIndex++;
             }
             // creamos un nodo nuevo
-            NodeD<T>* auxNew = NodeD<T>(data);
+            NodeD<T>* auxNew = new NodeD<T>(data);
             // el prev del nuevo lo apuntamos a aux
             auxNew->prev = aux;
             // el next del nuevo lo apuntamos a aux->next
