@@ -108,6 +108,4 @@ void BST<T>::printTree(NodeT<T>* node, string prefix, bool isRight, bool isRoot)
     printTree(node->left,  prefix + (isRoot ? "" : (isRight ? "|     " : "      ")), false, false);
 }
 
-
-
 #endif /* BST_h */
