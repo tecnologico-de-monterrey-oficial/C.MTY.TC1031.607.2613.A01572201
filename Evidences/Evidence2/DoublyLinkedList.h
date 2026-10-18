@@ -14,8 +14,8 @@ class DoublyLinkedList {
     private:
         NodeD<T>* head;
         NodeD<T>* tail;
-        int size = 0;
     public:
+        int size = 0;
         DoublyLinkedList() : head(nullptr), tail(nullptr), size(0) {}
         ~DoublyLinkedList() { clear(); }
         void print();
@@ -629,14 +629,14 @@ void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, in
     DoublyLinkedList<T> leftList;
     // iteramos la lista de left hasta mid
     for (int i = left; i <= mid; i++) {
-        leftList.push_back(list[i]);
+        leftList.addLast(list[i]);
     }
 
     // creamos una lista para los valores del lado derecho
     DoublyLinkedList<T> rightList;
     // iteramos la lista de mid + 1 hasta right
     for (int j = mid + 1; j <= right; j++) {
-        rightList.push_back(list[j]);
+        rightList.addLast(list[j]);
     }
 
     // combinamos las dos listas
@@ -648,7 +648,7 @@ void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, in
     int j = 0;
 
     // iteramos mientras no se acaben las listas
-    while (i < leftList.size() && j < rightList.size()) {
+    while (i < leftList.size && j < rightList.size) {
         // comparamos el valor de i de la lista izquierda con el valor de j de la lista derecha
         if (leftList[i] < rightList[j]) {
             // actualizamos list en index con el valor de leftList en i
@@ -667,7 +667,7 @@ void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, in
     }
 
     // vaciamos la lista del lado izquierdo
-    while (i < leftList.size()) {
+    while (i < leftList.size) {
         // actualizamos list en index con el valor de leftList en i
         list[index] = leftList[i];
         // incrementamos i
@@ -677,7 +677,7 @@ void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, in
     }
 
     // vaciamos la lista del lado derecho
-    while (j < rightList.size()) {
+    while (j < rightList.size) {
         // actualizamos list en index con el valor de rightList en j
         list[index] = rightList[j];
         // incrementamos j
