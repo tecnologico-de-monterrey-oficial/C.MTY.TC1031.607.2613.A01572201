@@ -117,7 +117,7 @@ int main() {
 
         // validamos que la línea no esté vacía
         if (currentLine.empty()) {
-            cout << "Línea " << lineNumber << " omitida debido a que está vacía." << endl;
+            cout << "Linea " << lineNumber << " omitida debido a que esta vacia." << endl;
             skippedCount++;
             continue;
         }
@@ -135,14 +135,14 @@ int main() {
                 throw invalid_argument("Año fuera de rango");
             }
         } catch (const invalid_argument& e) {
-            cout << "Línea " << lineNumber << " omitida debido a año inválido: " << tempLog.year << endl;
+            cout << "Linea " << lineNumber << " omitida debido a año invalido: " << tempLog.year << endl;
             skippedCount++;
             continue;
         }
 
         // Validacion de month
         if(monthValues(tempLog.month) == "") {
-            cout << "Línea " << lineNumber << " omitida debido a mes inválido: " << tempLog.month << endl;
+            cout << "Linea " << lineNumber << " omitida debido a mes invalido: " << tempLog.month << endl;
             skippedCount++;
             continue;
         }
@@ -151,10 +151,10 @@ int main() {
         try {
             int dayInt = stoi(tempLog.day);
             if (dayInt < 1 || dayInt > 31) {
-                throw invalid_argument("Día fuera de rango");
+                throw invalid_argument("Dia fuera de rango");
             }
         } catch (const invalid_argument& e) {
-            cout << "Línea " << lineNumber << " omitida debido a día inválido: " << tempLog.day << endl;
+            cout << "Linea " << lineNumber << " omitida debido a dia invalido: " << tempLog.day << endl;
             skippedCount++;
             continue;
         }
@@ -168,7 +168,7 @@ int main() {
                 segments.push_back(segment);
             }
             if (segments.size() != 3) {
-                throw invalid_argument("Formato de tiempo inválido");
+                throw invalid_argument("Formato de tiempo invalido");
             }
             int hour = stoi(segments[0]);
             int minute = stoi(segments[1]);
@@ -177,7 +177,7 @@ int main() {
                 throw invalid_argument("Tiempo fuera de rango");
             }
         } catch (const invalid_argument& e) {
-            cout << "Línea " << lineNumber << " omitida debido a tiempo inválido: " << tempLog.time << endl;
+            cout << "Linea " << lineNumber << " omitida debido a tiempo invalido: " << tempLog.time << endl;
             skippedCount++;
             continue;
         }
@@ -190,7 +190,7 @@ int main() {
             ipSegments.push_back(ipSegment);
         }
         if (ipSegments.size() != 4) {
-            cout << "Línea " << lineNumber << " omitida debido a IP inválida: " << tempLog.ip << endl;
+            cout << "Linea " << lineNumber << " omitida debido a IP invalida: " << tempLog.ip << endl;
             skippedCount++;
             continue;
         }
@@ -208,7 +208,7 @@ int main() {
             }
         }
         if (!validIp) {
-            cout << "Línea " << lineNumber << " omitida debido a IP inválida: " << tempLog.ip << endl;
+            cout << "Linea " << lineNumber << " omitida debido a IP invalida: " << tempLog.ip << endl;
             skippedCount++;
             continue;
         }
@@ -244,9 +244,9 @@ int main() {
 
         cout << "Que accion desea realizar?" << endl;
         cout << "1. Ordenar logs" << endl;
-        cout << "2. Buscar logs por día" << endl;
-        cout << "3. Mostrar logs por día en orden descendente" << endl;
-        cout << "4. Mostrar estadísticas del archivo" << endl;
+        cout << "2. Buscar logs por dia" << endl;
+        cout << "3. Mostrar logs por dia en orden descendente" << endl;
+        cout << "4. Mostrar estadisticas del archivo" << endl;
         cout << "5. Salir" << endl;
         cin >> option;
 
@@ -339,13 +339,13 @@ int main() {
                         throw invalid_argument("Año fuera de rango");
                     }
                 } catch (const invalid_argument& e) {
-                    cout << "Año inválido: " << searchYear << ". Intente de nuevo.\n\n";
+                    cout << "Año invalido: " << searchYear << ". Intente de nuevo.\n\n";
                     break;
                 }
 
                 // Validacion de mes
                 if (monthValues(searchMonth) == "") {
-                    cout << "Mes inválido: " << searchMonth << ". Intente de nuevo.\n\n";
+                    cout << "Mes invalido: " << searchMonth << ". Intente de nuevo.\n\n";
                     break;
                 }
 
@@ -353,10 +353,10 @@ int main() {
                 try {
                     int dayInt = stoi(searchDay);
                     if (dayInt < 1 || dayInt > 31) {
-                        throw invalid_argument("Día fuera de rango");
+                        throw invalid_argument("Dia fuera de rango");
                     }
                 } catch (const invalid_argument& e) {
-                    cout << "Día inválido: " << searchDay << ". Intente de nuevo.\n\n";
+                    cout << "Dia invalido: " << searchDay << ". Intente de nuevo.\n\n";
                     break;
                 }
 
@@ -371,7 +371,7 @@ int main() {
 
                 // buscamos la fecha en la lista de logs
                 int foundCount = 0;
-                cout << "\n--- RESULTADOS DE BÚSQUEDA PARA: " << dateStr << " ---" << endl;
+                cout << "\n--- RESULTADOS DE BUSQUEDA PARA: " << dateStr << " ---" << endl;
 
                 for (int i = 0; i < logs.size; i++) {
                     // obtenemos la clave de fecha del log actual (los primeros 8 caracteres de la clave)
@@ -440,13 +440,13 @@ int main() {
                         throw invalid_argument("Año fuera de rango");
                     }
                 } catch (const invalid_argument& e) {
-                    cout << "Año inválido: " << searchYear << ". Intente de nuevo.\n\n";
+                    cout << "Año invalido: " << searchYear << ". Intente de nuevo.\n\n";
                     break;
                 }
 
                 // Validacion de mes
                 if (monthValues(searchMonth) == "") {
-                    cout << "Mes inválido: " << searchMonth << ". Intente de nuevo.\n\n";
+                    cout << "Mes invalido: " << searchMonth << ". Intente de nuevo.\n\n";
                     break;
                 }
 
@@ -454,10 +454,10 @@ int main() {
                 try {
                     int dayInt = stoi(searchDay);
                     if (dayInt < 1 || dayInt > 31) {
-                        throw invalid_argument("Día fuera de rango");
+                        throw invalid_argument("Dia fuera de rango");
                     }
                 } catch (const invalid_argument& e) {
-                    cout << "Día inválido: " << searchDay << ". Intente de nuevo.\n\n";
+                    cout << "Dia invalido: " << searchDay << ". Intente de nuevo.\n\n";
                     break;
                 }
 
@@ -505,6 +505,17 @@ int main() {
                 }
                 break;
             }
+
+            case 4:
+                // verificamos que haya registros para mostrar estadísticas
+                if (logs.size == 0) {
+                    cout << "\nNo hay registros para mostrar estadisticas.\n\n";
+                    break;
+                }
+
+                // mostramos las estadísticas del archivo
+                cout << "\n--- ESTADISTICAS DEL ARCHIVO (" << fileUsed << ") ---" << endl;
+                cout << "Total de registros analizados: " << logs.size << endl;
 
             case 5:
                 // salimos del programa
