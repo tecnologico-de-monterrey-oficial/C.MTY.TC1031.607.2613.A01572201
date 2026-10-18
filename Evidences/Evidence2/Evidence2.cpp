@@ -90,30 +90,152 @@ int main() {
             return 1;
         }
 
-    while (getline(inputFile, line)) {
-        // creamos un stringstream con la línea leída
-        stringstream stream(line);
+    // Fila de logs
+    Queue<string> logsQueue;
 
-        // guardamos los datos de la línea en un log temporal
-        tempLog.log = line;
-        stream >> tempLog.month >> tempLog.day >> tempLog.year >> tempLog.time >> tempLog.ip;
+    // leemos el archivo línea por línea y guardamos los logs en la fila
+    while (getline(inputFile, line)) {
+        if (!line.empty()) {
+            logsQueue.push(line);
+        }
+    }
+    inputFile.close();
+
+    // procesamos la fila de logs y los guardamos en la lista de logs
+    int logCount = 0;
+    int skippedCount = 0;
+    int lineNumber = 0;
+
+    while (!logsQueue.empty()) {
+        lineNumber++;
+        string currentLine = logsQueue.front();
+        logsQueue.pop();
+
+        // creamos un log temporal y le asignamos la línea actual
+        tempLog.log = currentLine; 
+
+        // validamos que la línea no esté vacía
+        if (currentLine.empty()) {
+            cout << "Línea " << lineNumber << " omitida debido a que está vacía." << endl;
+            skippedCount++;
+            continue;
+        }
+
+        // procesamos la línea del log
+        stringstream ss(currentLine);
+        ss >> tempLog.year >> tempLog.month >> tempLog.day >> tempLog.time >> tempLog.ip;
+        getline(ss, tempLog.log);
+
+        // Comprobacion de los campos del log
+        // Validacion de year
+        try {
+            int yearInt = stoi(tempLog.year);
+            if (yearInt < 2000 || yearInt > 2099) {
+                throw invalid_argument("Año fuera de rango");
+            }
+        } catch (const invalid_argument& e) {
+            cout << "Línea " << lineNumber << " omitida debido a año inválido: " << tempLog.year << endl;
+            skippedCount++;
+            continue;
+        }
+
+        // Validacion de month
+        if(monthValues(tempLog.month) == "") {
+            cout << "Línea " << lineNumber << " omitida debido a mes inválido: " << tempLog.month << endl;
+            skippedCount++;
+            continue;
+        }
+
+        // Validacion de day
+        try {
+            int dayInt = stoi(tempLog.day);
+            if (dayInt < 1 || dayInt > 31) {
+                throw invalid_argument("Día fuera de rango");
+            }
+        } catch (const invalid_argument& e) {
+            cout << "Línea " << lineNumber << " omitida debido a día inválido: " << tempLog.day << endl;
+            skippedCount++;
+            continue;
+        }
+
+        // Validacion de time
+        try {
+            stringstream timeStream(tempLog.time);
+            string segment;
+            vector<string> segments;
+            while (getline(timeStream, segment, ':')) {
+                segments.push_back(segment);
+            }
+            if (segments.size() != 3) {
+                throw invalid_argument("Formato de tiempo inválido");
+            }
+            int hour = stoi(segments[0]);
+            int minute = stoi(segments[1]);
+            int second = stoi(segments[2]);
+            if (hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
+                throw invalid_argument("Tiempo fuera de rango");
+            }
+        } catch (const invalid_argument& e) {
+            cout << "Línea " << lineNumber << " omitida debido a tiempo inválido: " << tempLog.time << endl;
+            skippedCount++;
+            continue;
+        }
+
+        // Validacion de ip
+        stringstream ipStream(tempLog.ip);
+        string ipSegment;
+        vector<string> ipSegments;
+        while (getline(ipStream, ipSegment, '.')) {
+            ipSegments.push_back(ipSegment);
+        }
+        if (ipSegments.size() != 4) {
+            cout << "Línea " << lineNumber << " omitida debido a IP inválida: " << tempLog.ip << endl;
+            skippedCount++;
+            continue;
+        }
+        bool validIp = true;
+        for (const string& segment : ipSegments) {
+            try {
+                int segmentInt = stoi(segment);
+                if (segmentInt < 0 || segmentInt > 255) {
+                    validIp = false;
+                    break;
+                }
+            } catch (const invalid_argument& e) {
+                validIp = false;
+                break;
+            }
+        }
+        if (!validIp) {
+            cout << "Línea " << lineNumber << " omitida debido a IP inválida: " << tempLog.ip << endl;
+            skippedCount++;
+            continue;
+        }
+
+
+        // arreglamos la IP y el tiempo
+        tempLog.ip = tempLog.arrangeIp(tempLog.ip);
+        tempLog.time = tempLog.arrangeTime(tempLog.time);
 
         // creamos la clave única del log
-        tempLog.key = tempLog.createKey(tempLog.year, monthValues(tempLog.month), tempLog.day, tempLog.arrangeTime(tempLog.time), tempLog.arrangeIp(tempLog.ip));
+        tempLog.key = tempLog.createKey(tempLog.year, monthValues(tempLog.month), tempLog.day, tempLog.time, tempLog.ip);
 
-        // agregamos el log temporal al vector de logs
+        // agregamos el log a la lista de logs
         logs.addLast(tempLog);
+        logCount++;
     }
+
+    cout << "\n--- RESULTADOS DE LECTURA DE DATOS ---" << endl;
+    cout << "Registros cargados: " << logCount << endl;
+    cout << "Registros omitidos: " << skippedCount << endl;
 
     // creamos una copia de respaldo desordenada
     logsUnsorted = logs;
 
     // variables para predicción del usuario
     bool repeat = false;
-    string prediction;
-    DoublyLinkedList<Log> duplicados;
-    int predictionMs;
-    int predictionDif;
+    string predictionComplexity;
+    string predictionDif;
     
     // inicializamos opción para arrancar el ciclo del menú principal
     option = -1;
@@ -127,58 +249,59 @@ int main() {
         cout << "3. Mostrar logs por día en orden descendente" << endl;
         cout << "4. Mostrar estadísticas del archivo" << endl;
         cin >> option;
-    }
 
-    switch (option) {
-        case 0:
-            // salimos del programa
-            cout << "Saliendo del programa..." << endl;
-            break;
-
-        case 1:
-            // restauramos la lista a su estado inicial y solicitamos predicciones
-            logs = logsUnsorted;
-
-            cout << "\nCual es tu prediccion de rendimiento/tiempo para este algoritmo? (En ms)" << endl;
-            cin >> predictionMs;
-
-            cout << "Porque?" << endl;
-            cin.ignore(); getline(cin, prediction);
-
-            // tomamos el tiempo antes y despues del método de ordenamiento
-            startTime = chrono::high_resolution_clock::now();
-            logs.sort(logs, 0, logs.size - 1);
-            endTime = chrono::high_resolution_clock::now();
-
-            // calculamos la diferencia y actualizamos la bandera de ordenamiento
-            duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
-            sorted = true;
-
-            // si la lista quedó vacía detenemos este case
-            if(logs.size == 0){
-                cout << "\nNo fue posible guardar el vector.\nEl vector esta vacio.\n\n";
+        switch (option) {
+            case 0:
+                // salimos del programa
+                cout << "Saliendo del programa..." << endl;
                 break;
-            }
 
-            // preparamos e imprimimos la información detallada de la corrida
-            predictionDif = abs((int)duration - predictionMs);
-            cout << "\n--- RESULTADOS ---" << endl;
-            cout << "Algoritmo: Merge Sort" << endl;
-            cout << "Archivo usado: " << fileUsed << endl;
-            cout << "Tamano de la lista: " << logs.size << " elementos" << endl;
-            cout << "Tiempo: " << duration << " milisegundos" << endl;
-            cout << "Complejidad teorica: O(n log n)" << endl;
-            cout << "Tu prediccion: " << predictionMs << endl;
-            cout << "Razon: " << prediction << endl;
+            case 1:
+                // restauramos la lista a su estado inicial y solicitamos predicciones
+                logs = logsUnsorted;
 
-            // verificamos si la predicción fue exacta
-            if(predictionDif == 0) cout << "Tu prediccion fue correcta." << endl;
-            else cout << "Tu prediccion difiere por " << predictionDif << " ms." << endl;
-            cout << "------------------\n" << endl;
+                cout << "\nCual es tu prediccion del crecimiento en el número de comparaciones? (por ejemplo, aproximadamente n·log n o n²)" << endl;
+                cin >> predictionComplexity;
 
-            // escribimos el resultado y notificamos al usuario
-            generateFile(outputFile, logs, 0, logs.size - 1);
-            cout << "\nSe ha guardado la informacion\n\n";
-            break;
+                /*cout << "Porque?" << endl;
+                cin.ignore(); getline(cin, prediction);*/
+
+                // tomamos el tiempo antes y despues del método de ordenamiento
+                startTime = chrono::high_resolution_clock::now();
+                logs.sort(logs, 0, logs.size - 1);
+                endTime = chrono::high_resolution_clock::now();
+
+                // calculamos la diferencia y actualizamos la bandera de ordenamiento
+                duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+                sorted = true;
+
+                // si la lista quedó vacía detenemos este case
+                if(logs.size == 0){
+                    cout << "\nNo fue posible guardar la lista.\nLa lista esta vacia.\n\n";
+                    break;
+                }
+
+                predictionDif = "n·log n";
+
+                // imprimimos la información detallada de la corrida
+                cout << "\n--- RESULTADOS ---" << endl;
+                cout << "Algoritmo: Merge Sort" << endl;
+                cout << "Archivo usado: " << fileUsed << endl;
+                cout << "Tamano de la lista: " << logs.size << " elementos" << endl;
+                cout << "Tiempo: " << duration << " milisegundos" << endl;
+                cout << "Complejidad teorica: " << predictionDif << endl;
+                cout << "Tu prediccion: " << predictionComplexity << endl;
+                //cout << "Razon: " << prediction << endl;
+
+                // verificamos si la predicción fue exacta
+                if(predictionDif == predictionComplexity) cout << "Tu prediccion fue correcta." << endl;
+                else cout << "Tu prediccion no fue correcta." << endl;
+                cout << "------------------\n" << endl;
+
+                // escribimos el resultado y notificamos al usuario
+                generateFile(outputFile, logs, 0, logs.size - 1);
+                cout << "\nSe ha guardado la informacion\n\n";
+                break;
+        }
     }
 }
