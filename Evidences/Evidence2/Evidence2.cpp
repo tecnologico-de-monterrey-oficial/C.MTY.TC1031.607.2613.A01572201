@@ -43,6 +43,8 @@ void generateFile(string fileName, DoublyLinkedList<Log> &list, int start, int e
 int main() {
     // variables
     int left, right, option;
+    long long totalComparisons = 0;
+    int maxRecursionDepth = 0;
     bool sorted = false;
     auto startTime = chrono::high_resolution_clock::now();
     auto endTime = chrono::high_resolution_clock::now();
@@ -50,6 +52,14 @@ int main() {
     string line;
     string fileUsed;
     string lastUsedDate = "";
+    map<string, int> eventNums;
+    map<string, int> dayNums;
+    map<string, int> ipNums;
+    int maxEvent, maxDay, maxIp;
+    maxEvent = maxDay = maxIp = 0;
+    string maxEventStr, maxDayStr, maxIpStr;
+    string ogIp; 
+    maxEventStr = maxDayStr = maxIpStr = "";
 
     // variables para guardar los datos de los logs
     Log tempLog, startLog, endLog;
@@ -61,7 +71,7 @@ int main() {
     ifstream inputFile;
 
     // nombre de los archivos de salida
-    string outputFile = "output608.txt", rangeFile = "range607.txt";
+    string outputFile = "output608.txt";
 
     // pedimos al usuario que ingrese el nombre del archivo a usar
     cout << "Cual es el nombre del archivo que desea usar? (inserte el numero)" << endl;
@@ -77,11 +87,11 @@ int main() {
 
     if (option == 1) {
         // abrimos el archivo log607-1.txt
-        inputFile.open("../data/log607-1.txt");
+        inputFile.open("./data/log607-1.txt");
         fileUsed = "log607-1.txt";
     } else if (option == 2) {
         // abrimos el archivo log607-2.txt
-        inputFile.open("../data/log607-2.txt");
+        inputFile.open("./data/log607-2.txt");
         fileUsed = "log607-2.txt";
     } 
 
@@ -124,7 +134,7 @@ int main() {
 
         // procesamos la línea del log
         stringstream ss(currentLine);
-        ss >> tempLog.year >> tempLog.month >> tempLog.day >> tempLog.time >> tempLog.ip;
+        ss >> tempLog.month >> tempLog.day >> tempLog.year >> tempLog.time >> tempLog.ip;
         getline(ss, tempLog.log);
 
         // Comprobacion de los campos del log
@@ -215,18 +225,38 @@ int main() {
 
 
         // arreglamos la IP y el tiempo
+        ogIp = tempLog.ip;
         tempLog.ip = tempLog.arrangeIp(tempLog.ip);
         tempLog.time = tempLog.arrangeTime(tempLog.time);
 
         // creamos la clave única del log
         tempLog.key = tempLog.createKey(tempLog.year, monthValues(tempLog.month), tempLog.day, tempLog.time, tempLog.ip);
 
+        // Conteo de eventos, días y direcciones IP
+        eventNums[tempLog.log]++;
+        if (eventNums[tempLog.log] > maxEvent) {
+            maxEvent = eventNums[tempLog.log];
+            maxEventStr = tempLog.log;
+        }
+
+        dayNums[tempLog.day + tempLog.month + tempLog.year]++;
+        if (dayNums[tempLog.day + tempLog.month + tempLog.year] > maxDay) {
+            maxDay = dayNums[tempLog.day + tempLog.month + tempLog.year];
+            maxDayStr = tempLog.day + "-" + tempLog.month + "-" + tempLog.year;
+        }
+
+        ipNums[tempLog.ip]++;
+        if (ipNums[tempLog.ip] > maxIp) {
+            maxIp = ipNums[tempLog.ip];
+            maxIpStr = ogIp;
+        }
+
         // agregamos el log a la lista de logs
         logs.addLast(tempLog);
         logCount++;
     }
 
-    cout << "\n--- RESULTADOS DE LECTURA DE DATOS ---" << endl;
+    cout << "\n--- LECTURA DE DATOS (" << fileUsed << ") ---" << endl;
     cout << "Registros cargados: " << logCount << endl;
     cout << "Registros omitidos: " << skippedCount << endl;
 
@@ -242,7 +272,7 @@ int main() {
     // validamos que la opción este disponible y sea distinta a salida (0)
     while (option != 0) {
 
-        cout << "Que accion desea realizar?" << endl;
+        cout << "\nQue accion desea realizar?" << endl;
         cout << "1. Ordenar logs" << endl;
         cout << "2. Buscar logs por dia" << endl;
         cout << "3. Mostrar logs por dia en orden descendente" << endl;
@@ -257,15 +287,15 @@ int main() {
                     break;
                 }
                 
-                cout << "\nCual es tu prediccion del crecimiento en el número de comparaciones? (por ejemplo, aproximadamente n·log n o n²)" << endl;
+                cout << "\nCual es tu prediccion del crecimiento en el numero de comparaciones? (por ejemplo, aproximadamente nlogn o n^2)" << endl;
                 cin >> predictionComplexity;
 
                 /*cout << "Porque?" << endl;
                 cin.ignore(); getline(cin, prediction);*/
 
                 // variables para ver total de comparaciones y profundidad máxima de recursión
-                long long totalComparisons = 0;
-                int maxRecursionDepth = 0;
+                totalComparisons = 0;
+                maxRecursionDepth = 0;
 
                 // tomamos el tiempo antes y despues del método de ordenamiento
                 startTime = chrono::high_resolution_clock::now();
@@ -282,7 +312,7 @@ int main() {
                     break;
                 }
 
-                predictionDif = "n·log n";
+                predictionDif = "nlogn";
 
                 // imprimimos la información detallada de la corrida
                 cout << "\n--- RESULTADOS ---" << endl;
@@ -391,15 +421,14 @@ int main() {
                         // Como la lista está ordenada, en cuanto la clave supere la fecha buscada, nos detenemos
                         break;
                     }
-
-                    cout << "-----------------------------------------------" << endl;
-                    if (foundCount == 0) {
-                        cout << "No se encontraron registros para la fecha especificada.\n" << endl;
-                    } else {
-                        cout << "Total de registros encontrados: " << foundCount << "\n" << endl;
-                    }
-                    break;
                 }
+                cout << "-----------------------------------------------" << endl;
+                if (foundCount == 0) {
+                    cout << "No se encontraron registros para la fecha especificada.\n" << endl;
+                } else {
+                    cout << "Total de registros encontrados: " << foundCount << "\n" << endl;
+                }
+                break;
             }
 
             case 3: {
@@ -515,12 +544,16 @@ int main() {
 
                 // mostramos las estadísticas del archivo
                 cout << "\n--- ESTADISTICAS DEL ARCHIVO (" << fileUsed << ") ---" << endl;
-                cout << "Total de registros analizados: " << logs.size << endl;
+                cout << "Total de registros cargados: " << logCount << endl;
+                cout << "Evento mas frecuente: " << maxEventStr << " con " << maxEvent << " ocurrencias" << endl;
+                cout << "Dia mas frecuente: " << maxDayStr << " con " << maxDay << " ocurrencias" << endl;
+                cout << "IP mas frecuente: " << maxIpStr << " con " << maxIp << " ocurrencias" << endl;
+                break;
 
             case 5:
                 // salimos del programa
                 cout << "Saliendo del programa..." << endl;
-                break;
+                return 0;
         }
     }
 }
