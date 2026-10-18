@@ -233,7 +233,6 @@ int main() {
     logsUnsorted = logs;
 
     // variables para predicción del usuario
-    bool repeat = false;
     string predictionComplexity;
     string predictionDif;
     
@@ -257,9 +256,11 @@ int main() {
                 break;
 
             case 1:
-                // restauramos la lista a su estado inicial y solicitamos predicciones
-                logs = logsUnsorted;
-
+                if (sorted) {
+                    cout << "\nLa lista ya esta ordenada.\n\n";
+                    break;
+                }
+                
                 cout << "\nCual es tu prediccion del crecimiento en el número de comparaciones? (por ejemplo, aproximadamente n·log n o n²)" << endl;
                 cin >> predictionComplexity;
 
