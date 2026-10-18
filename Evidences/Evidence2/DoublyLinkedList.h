@@ -32,7 +32,8 @@ class DoublyLinkedList {
         const T& operator[](int index) const;
         DoublyLinkedList& operator=(const DoublyLinkedList<T> &other);
         void clear();
-        void sort(DoublyLinkedList<T> &list);
+        void merge(DoublyLinkedList<T> &list, int left, int mid, int right);
+        void sort(DoublyLinkedList<T> &list, int left, int right);
         void duplicate();
         void removeDuplicates();
 };
@@ -623,37 +624,85 @@ void DoublyLinkedList<T>::clear() {
 }
 
 template <typename T>
-void DoublyLinkedList<T>::sort(DoublyLinkedList<T> &list) {
-    // shellSort
-    // obtenemos el tamaño de la lista y la mitad del tamaño
-    int size = list.size;
-    int half = size / 2;
+void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, int right) {
+    // creamos una lista para los valores del lado izquierdo
+    DoublyLinkedList<T> leftList;
+    // iteramos la lista de left hasta mid
+    for (int i = left; i <= mid; i++) {
+        leftList.push_back(list[i]);
+    }
 
-    // iteramos mientras half sea mayor a 0
-    while (half > 0) {
-        // iteramos desde half hasta el final de la lista
-        for (int i = half; i < size; i++) {
-            // creamos una variable temporal con el valor de la posición i
-            T temp = list[i];
-            // creamos una variable auxiliar con el valor de i
-            int aux = i;
+    // creamos una lista para los valores del lado derecho
+    DoublyLinkedList<T> rightList;
+    // iteramos la lista de mid + 1 hasta right
+    for (int j = mid + 1; j <= right; j++) {
+        rightList.push_back(list[j]);
+    }
 
-            // iteramos mientras aux sea mayor o igual a half y 
-            // el valor en la posición aux - half sea mayor que temp
-            while (aux >= half && list[aux - half] > temp) {
-                // actualizamos el valor en la posición aux con 
-                // el valor en la posición aux - half
-                list[aux] = list[aux - half];
-                // decrementamos aux en half
-                aux -= half;
-            }
+    // combinamos las dos listas
+    // creamos una variable index que contenga el indice a actualizar
+    int index = left;
+    // inicializamos el indice del lado izquierdo
+    int i = 0;
+    // inicializamos el indice del lado derecho
+    int j = 0;
 
-            // actualizamos el valor en la posición aux con temp
-            list[aux] = temp;
+    // iteramos mientras no se acaben las listas
+    while (i < leftList.size() && j < rightList.size()) {
+        // comparamos el valor de i de la lista izquierda con el valor de j de la lista derecha
+        if (leftList[i] < rightList[j]) {
+            // actualizamos list en index con el valor de leftList en i
+            list[index] = leftList[i];
+            // incrementamos i
+            i++;
+        } else {
+            // actualizamos list en index con el valor de rightList en j
+            list[index] = rightList[j];
+            // incrementamos j
+            j++;
         }
 
-        // decrementamos half a la mitad
-        half /= 2;
+        // incrementamos index
+        index++;
+    }
+
+    // vaciamos la lista del lado izquierdo
+    while (i < leftList.size()) {
+        // actualizamos list en index con el valor de leftList en i
+        list[index] = leftList[i];
+        // incrementamos i
+        i++;
+        // incrementamos index
+        index++;
+    }
+
+    // vaciamos la lista del lado derecho
+    while (j < rightList.size()) {
+        // actualizamos list en index con el valor de rightList en j
+        list[index] = rightList[j];
+        // incrementamos j
+        j++;
+        // incrementamos index
+        index++;
+    }
+}
+
+template <typename T>
+void DoublyLinkedList<T>::sort(DoublyLinkedList<T> &list, int left, int right) {
+    // mergeSort
+    // la condicion de control es left < right
+    if (left < right) {
+        // calculamos mid
+        int mid = (left + right) / 2;
+
+        // ordenamos de left a mid
+        sort(list, left, mid);
+
+        // ordenamos de mid + 1 a right
+        sort(list, mid + 1, right);
+
+        // combinamos las dos partes de la lista
+        merge(list, left, mid, right);
     }
 }
 
