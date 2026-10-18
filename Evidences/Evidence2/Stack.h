@@ -14,6 +14,7 @@ class Stack {
     private:
         Node<T>* head;
     public:
+        bool empty() { return head == nullptr; }
         Stack() : head(nullptr) {}
         void pop();
         void push(T data);
@@ -28,7 +29,7 @@ void Stack<T>::pop() {
         // creamos un elemento aux igual a head
         Node<T>* aux = head;
         // decimos que elemento se va a borrar
-        cout << "Borrando el elemento: " << aux->data << endl;
+        //cout << "Borrando el elemento: " << aux->data << endl;
         // recorremos head a head->next
         head = head->next;
         // borramos el primer elemento

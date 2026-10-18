@@ -32,8 +32,8 @@ class DoublyLinkedList {
         const T& operator[](int index) const;
         DoublyLinkedList& operator=(const DoublyLinkedList<T> &other);
         void clear();
-        void merge(DoublyLinkedList<T> &list, int left, int mid, int right);
-        void sort(DoublyLinkedList<T> &list, int left, int right);
+        void merge(DoublyLinkedList<T> &list, int left, int mid, int right, long long &comparisons);
+        void sort(DoublyLinkedList<T> &list, int left, int right, int currentDepth, int &maxDepth, long long &comparisons);
         void duplicate();
         void removeDuplicates();
 };
@@ -624,7 +624,7 @@ void DoublyLinkedList<T>::clear() {
 }
 
 template <typename T>
-void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, int right) {
+void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, int right, long long &comparisons) {
     // creamos una lista para los valores del lado izquierdo
     DoublyLinkedList<T> leftList;
     // iteramos la lista de left hasta mid
@@ -649,6 +649,9 @@ void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, in
 
     // iteramos mientras no se acaben las listas
     while (i < leftList.size && j < rightList.size) {
+        // incrementamos el contador de comparaciones
+        comparisons++;
+
         // comparamos el valor de i de la lista izquierda con el valor de j de la lista derecha
         if (leftList[i] < rightList[j]) {
             // actualizamos list en index con el valor de leftList en i
@@ -688,21 +691,26 @@ void DoublyLinkedList<T>::merge(DoublyLinkedList<T> &list, int left, int mid, in
 }
 
 template <typename T>
-void DoublyLinkedList<T>::sort(DoublyLinkedList<T> &list, int left, int right) {
+void DoublyLinkedList<T>::sort(DoublyLinkedList<T> &list, int left, int right, int currentDepth, int &maxDepth, long long &comparisons) {
     // mergeSort
+    // Actualizamos la profundidad máxima alcanzada si la actual es mayor
+    if (currentDepth > maxDepth) {
+        maxDepth = currentDepth;
+    }
+
     // la condicion de control es left < right
     if (left < right) {
         // calculamos mid
         int mid = (left + right) / 2;
 
         // ordenamos de left a mid
-        sort(list, left, mid);
+        sort(list, left, mid, currentDepth + 1, maxDepth, comparisons);
 
         // ordenamos de mid + 1 a right
-        sort(list, mid + 1, right);
+        sort(list, mid + 1, right, currentDepth + 1, maxDepth, comparisons);
 
         // combinamos las dos partes de la lista
-        merge(list, left, mid, right);
+        merge(list, left, mid, right, comparisons);
     }
 }
 
