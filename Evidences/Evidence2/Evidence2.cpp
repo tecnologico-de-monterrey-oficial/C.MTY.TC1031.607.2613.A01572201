@@ -39,3 +39,95 @@ void generateFile(string fileName, vector<Log> &list, int start, int end) {
     // cerramos el archivo
     file.close();
 }
+
+int main() {
+    // variables
+    int left, right, option;
+    bool sorted = false;
+    auto startTime = chrono::high_resolution_clock::now();
+    auto endTime = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+    string line;
+    string fileUsed;
+
+    // variables para guardar los datos de los logs
+    Log tempLog, startLog, endLog;
+
+    // creamos los vectores de logs
+    vector<Log> logs, logsUnsorted, logsRange;
+
+    // inicializamos la lectura del archivo
+    ifstream inputFile;
+
+    // nombre de los archivos de salida
+    string outputFile = "output608.txt", rangeFile = "range607.txt";
+
+    // pedimos al usuario que ingrese el nombre del archivo a usar
+    cout << "Cual es el nombre del archivo que desea usar? (inserte el numero)" << endl;
+    cout << "1. log607-1.txt" << endl;
+    cout << "2. log607-2.txt" << endl;
+    cin >> option;
+
+    // validamos que la opción sea 1 o 2
+    while (option != 1 && option != 2) {
+        cout << "Opcion invalida, intente de nuevo" << endl;
+        cin >> option;
+    }
+
+    if (option == 1) {
+        // abrimos el archivo log607-1.txt
+        inputFile.open("../data/log607-1.txt");
+        fileUsed = "log607-1.txt";
+    } else if (option == 2) {
+        // abrimos el archivo log607-2.txt
+        inputFile.open("../data/log607-2.txt");
+        fileUsed = "log607-2.txt";
+    } 
+
+    // validamos que el archivo se haya abierto correctamente
+        if (!inputFile.is_open()) {
+            cout << "Error al abrir el archivo" << endl;
+            return 1;
+        }
+
+    while (getline(inputFile, line)) {
+        // creamos un stringstream con la línea leída
+        stringstream stream(line);
+
+        // guardamos los datos de la línea en un log temporal
+        tempLog.log = line;
+        stream >> tempLog.month >> tempLog.day >> tempLog.year >> tempLog.time >> tempLog.ip;
+
+        // creamos la clave única del log
+        tempLog.key = tempLog.createKey(tempLog.year, monthValues(tempLog.month), tempLog.day, tempLog.arrangeTime(tempLog.time), tempLog.arrangeIp(tempLog.ip));
+
+        // agregamos el log temporal al vector de logs
+        logs.push_back(tempLog);
+    }
+
+    // creamos una copia de respaldo desordenada
+    logsUnsorted = logs;
+
+    // variables exclusivas para búsqueda binaria y predicción del usuario
+    int startIndex;
+    int endIndex;
+    bool repeat = false;
+    string prediction;
+    vector<Log> duplicados;
+    int predictionMs;
+    int predictionDif;
+    
+    // inicializamos opción para arrancar el ciclo del menú principal
+    option = -1;
+    // validamos que la opción este disponible y sea distinta a salida (0)
+    while (option != 0) {
+
+        cout << "Que accion desea realizar?" << endl;
+        cout << "0. Salir" << endl;
+        cout << "1. Ordenar logs" << endl;
+        cout << "2. Buscar logs por día" << endl;
+        cout << "3. Mostrar logs por día en orden descendente" << endl;
+        cout << "4. Mostrar estadísticas del archivo" << endl;
+        cin >> option;
+    }
+}
