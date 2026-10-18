@@ -15,7 +15,8 @@ class Queue {
         Node<T>* head;
         Node<T>* tail;
     public:
-        bool empty() { return head == nullptr; }
+        int size = 0;
+        bool isEmpty() { return head == nullptr; }
         Queue() : head(nullptr), tail(nullptr) {}
         void pop();
         void push(T data);

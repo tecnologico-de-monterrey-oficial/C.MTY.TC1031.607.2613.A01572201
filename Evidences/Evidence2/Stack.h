@@ -14,7 +14,8 @@ class Stack {
     private:
         Node<T>* head;
     public:
-        bool empty() { return head == nullptr; }
+        int size = 0;
+        bool isEmpty() { return head == nullptr; }
         Stack() : head(nullptr) {}
         void pop();
         void push(T data);

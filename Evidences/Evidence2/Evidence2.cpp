@@ -107,7 +107,7 @@ int main() {
     int skippedCount = 0;
     int lineNumber = 0;
 
-    while (!logsQueue.empty()) {
+    while (!logsQueue.isEmpty()) {
         lineNumber++;
         string currentLine = logsQueue.front();
         logsQueue.pop();
@@ -496,7 +496,7 @@ int main() {
                 if (foundCount == 0) {
                     cout << "No se encontraron registros para la fecha especificada.\n" << endl;
                 } else {
-                    while (!logStack.empty()) {
+                    while (!logStack.isEmpty()) {
                         cout << logStack.top() << endl;
                         logStack.pop();
                     }
