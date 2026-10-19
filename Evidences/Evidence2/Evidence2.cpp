@@ -418,7 +418,7 @@ int main() {
                     // Si la fecha del log coincide exactamente con la buscada
                     if (logDateKey == searchDateKey) {
                         // mostramos el log encontrado y aumentamos el contador de encontrados
-                        cout << logs[i].log << endl;
+                        cout << logs[i].rawLog << endl;
                         foundCount++;
                     } else if (logDateKey > searchDateKey) {
                         // Como la lista está ordenada, en cuanto la clave supere la fecha buscada, nos detenemos
@@ -516,7 +516,7 @@ int main() {
                     // Si la fecha del log coincide exactamente con la buscada, lo agregamos a la pila
                     if (logDateKey == searchDateKey) {
                         // agregamos el log a la pila para mostrarlo en orden descendente
-                        logStack.push(logs[i].log);
+                        logStack.push(logs[i].rawLog);
                         foundCount++;
                     } else if (logDateKey > searchDateKey) {
                         // Como la lista está ordenada, en cuanto la clave supere la fecha buscada, nos detenemos
