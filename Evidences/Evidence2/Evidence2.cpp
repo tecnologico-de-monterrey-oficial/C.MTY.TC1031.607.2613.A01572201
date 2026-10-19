@@ -29,7 +29,7 @@ void generateFile(string fileName, DoublyLinkedList<Log> &list, int start, int e
         // iteramos desde start hasta end
         for (int i = start; i <= end; i++) {
             // escribimos el log en la posición i en el archivo
-            file << list[i].log << endl;
+            file << list[i].rawLog << endl;
         }
     } else {
         // si el archivo no se abrió correctamente, imprimimos un mensaje de error
@@ -52,13 +52,10 @@ int main() {
     string line;
     string fileUsed;
     string lastUsedDate = "";
-    map<string, int> eventNums;
-    map<string, int> dayNums;
-    map<string, int> ipNums;
+    map<string, int> eventNums, dayNums, ipNums;
     int maxEvent, maxDay, maxIp;
     maxEvent = maxDay = maxIp = 0;
-    string maxEventStr, maxDayStr, maxIpStr;
-    string ogIp; 
+    string maxEventStr, maxDayStr, maxIpStr, ogIp; 
     maxEventStr = maxDayStr = maxIpStr = "";
 
     // variables para guardar los datos de los logs
@@ -123,7 +120,7 @@ int main() {
         logsQueue.pop();
 
         // creamos un log temporal y le asignamos la línea actual
-        tempLog.log = currentLine; 
+        tempLog.rawLog = currentLine; 
 
         // validamos que la línea no esté vacía
         if (currentLine.empty()) {
@@ -237,18 +234,24 @@ int main() {
         if (eventNums[tempLog.log] > maxEvent) {
             maxEvent = eventNums[tempLog.log];
             maxEventStr = tempLog.log;
+        } else if (eventNums[tempLog.log] == maxEvent) {
+            maxEventStr += ", " + tempLog.log;
         }
 
         dayNums[tempLog.day + tempLog.month + tempLog.year]++;
         if (dayNums[tempLog.day + tempLog.month + tempLog.year] > maxDay) {
             maxDay = dayNums[tempLog.day + tempLog.month + tempLog.year];
             maxDayStr = tempLog.day + "-" + tempLog.month + "-" + tempLog.year;
+        } else if (dayNums[tempLog.day + tempLog.month + tempLog.year] == maxDay) {
+            maxDayStr += ", " + tempLog.day + "-" + tempLog.month + "-" + tempLog.year;
         }
 
         ipNums[tempLog.ip]++;
         if (ipNums[tempLog.ip] > maxIp) {
             maxIp = ipNums[tempLog.ip];
             maxIpStr = ogIp;
+        } else if (ipNums[tempLog.ip] == maxIp) {
+            maxIpStr += ", " + ogIp;
         }
 
         // agregamos el log a la lista de logs

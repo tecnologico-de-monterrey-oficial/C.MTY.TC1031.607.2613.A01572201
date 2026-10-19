@@ -23,6 +23,7 @@ struct Log {
     string ip;
     string log;
     string key;
+    string rawLog;
 
     // Constructor
     Log() {
