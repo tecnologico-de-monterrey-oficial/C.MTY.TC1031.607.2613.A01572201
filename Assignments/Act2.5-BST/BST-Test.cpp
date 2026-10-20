@@ -11,13 +11,17 @@ int main() {
     bst.insert(70);
     bst.insert(40);
     bst.insert(20);
+    bst.insert(35);
     bst.insert(80);
     bst.print();
-    if (bst.find(40)) {
+    /*if (bst.find(40)) {
         cout << "si se encuentra el nodo" << endl;
     } else {
         cout << "no se encuentra el nodo" << endl;
-    }
+    }*/
+    bst.visit("preOrder");
+    bst.visit("inOrder");
+    bst.visit("postOrder");
 
     return 0;
 }
