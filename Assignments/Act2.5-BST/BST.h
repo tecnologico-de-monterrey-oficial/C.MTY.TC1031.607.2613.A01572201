@@ -87,7 +87,7 @@ bool BST<T>::find(T data) {
                 return true;
             } else {
                 // recorremos aux
-                //if (data < aux->data ? aux = aux->left : aux = aux->right);
+                // (data < aux->data) ? aux = aux->left : aux = aux->right;
                 if (data < aux->data) {
                     aux = aux->left;
                 } else {
@@ -195,7 +195,125 @@ void BST<T>::remove(T data) {
                 return;
             }
             // root tiene dos hijos
-            
+            // creamos un apuntador aux igual a root
+            NodeT<T>* aux = root;
+            // validamos que el apuntador right de aux->left sea nulos
+            if (aux->left->right == nullptr) {
+                // aux->left es el más grande del lado izquierdo
+                // creamos un apuntador que apunte a aux->left
+                NodeT<T>* auxRemove = aux->left;
+                // actualizamos el valor de aux por el valor de aux->left
+                aux->data = auxRemove->data;
+                // asignamos a aux->left, auxRemove->left
+                aux->left = auxRemove->left;
+                // removemos auxRemove
+                delete auxRemove;
+                // nos salimos de la funcion
+                return;
+            } else {
+                // el más grande del lado izquierdo no es aux->left
+                // creamos un apuntador que va a ser el padre del que voy a remover igual a aux->left
+                NodeT<T>* fatherRemove = aux->left;
+                // creamos un apuntador hacia el hijo derecho de fatherRemove
+                NodeT<T>* auxRemove = fatherRemove->right;
+                // iteramos hasta encontrar el más grande
+                while (auxRemove->right != nullptr) {
+                    // recorremos los apuntadores hacia la derecha
+                    fatherRemove = auxRemove;
+                    auxRemove = auxRemove->right;
+                }
+                // ya encontramos al más grande del lado izquierdo
+                // igualamos aux->data igual a auxRemove->data
+                aux->data = auxRemove->data;
+                // actualizamos con nulos el lado derecho de fatherRemove
+                fatherRemove->right = nullptr;
+                // removemos auxRemove
+                delete auxRemove;
+                // nos salimos de la funcion
+                return;
+            }
+        } else {
+            // no quiero borrar raiz
+            // busco el nodo a borrar
+            // creamos un apuntador father igual a root
+            NodeT<T>* father = root;
+            // creamos un apuntador aux igual al hijo correspondiente
+            NodeT<T>* aux = (data < root->data) ? root->left : root->right;
+            // itero en el arbol hasta encontrar el nodo a buscar o que no lo encuentre
+            while (aux != nullptr) {
+                // valido si aux->data es igual a data
+                if (aux->data == data) {
+                    // son iguales
+                    // lo removemos
+                    // validamos si no tiene hijos
+                    if (aux->left == nullptr && aux->right == nullptr) {
+                        // aux no tiene hijos
+                        // asignamos nulos al hijo correspondiente de father
+                        (data < father->data) ? father->left = nullptr : father->right = nullptr;
+                        // removemos aux
+                        delete aux;
+                        // nos salimos de la funcion
+                        return;
+                    }
+                    // validamos si tiene un hijo
+                    if (aux->left == nullptr || aux->right == nullptr) {
+                        // aux solo tiene un hijo
+                        if (data < father->data) {
+                            // el hijo esta a la izquierda del padre
+                            father->left = (aux->left != nullptr) ? aux->left : aux->right;
+                        } else {
+                            // el hijo esta a la derecha del padre
+                            father->right = (aux->left != nullptr) ? aux->left : aux->right;
+                        }
+                        // removemos aux
+                        delete aux;
+                        // nos salimos de la funcion
+                        return;
+                    }
+                    // aux tiene dos hijos
+                    // validamos que el apuntador right de aux->left sea nulos
+                    if (aux->left->right == nullptr) {
+                        // aux->left es el más grande del lado izquierdo
+                        // creamos un apuntador que apunte a aux->left
+                        NodeT<T>* auxRemove = aux->left;
+                        // actualizamos el valor de aux por el valor de aux->left
+                        aux->data = auxRemove->data;
+                        // asignamos a aux->left, auxRemove->left
+                        aux->left = auxRemove->left;
+                        // removemos auxRemove
+                        delete auxRemove;
+                        // nos salimos de la funcion
+                        return;
+                    } else {
+                        // el más grande del lado izquierdo no es aux->left
+                        // creamos un apuntador que va a ser el padre del que voy a remover igual a aux->left
+                        NodeT<T>* fatherRemove = aux->left;
+                        // creamos un apuntador hacia el hijo derecho de fatherRemove
+                        NodeT<T>* auxRemove = fatherRemove->right;
+                        // iteramos hasta encontrar el más grande
+                        while (auxRemove->right != nullptr) {
+                            // recorremos los apuntadores hacia la derecha
+                            fatherRemove = auxRemove;
+                            auxRemove = auxRemove->right;
+                        }
+                        // ya encontramos al más grande del lado izquierdo
+                        // igualamos aux->data igual a auxRemove->data
+                        aux->data = auxRemove->data;
+                        // actualizamos con nulos el lado derecho de fatherRemove
+                        fatherRemove->right = nullptr;
+                        // removemos auxRemove
+                        delete auxRemove;
+                        // nos salimos de la funcion
+                        return;
+                    }
+                } else {
+                    // recorremos aux y father
+                    father = aux;
+                    aux = (data < aux->data) ? aux->left : aux->right;
+                }
+            }
+            // no se encontro el dato a buscar, arrojamos una excepcion
+            throw out_of_range("El nodo a borrar no existe");
         }
     }
 }
