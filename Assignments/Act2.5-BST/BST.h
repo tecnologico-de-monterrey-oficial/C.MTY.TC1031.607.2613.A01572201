@@ -360,13 +360,15 @@ int BST<T>::height() {
 
 template <typename T>
 void BST<T>::ancestors(T data) {
-    // si el arbol esta vacio, no hay ancestros
-    if (root == nullptr) {
+    // si el arbol esta vacio o no se encuentra el dato, no hay ancestros
+    if (root == nullptr || !find(data)) {
+        cout << "\nEl dato no se encontro\n";
         return;
     }
 
     // si el dato esta en la raiz, no tiene ancestros
     if (root->data == data) {
+        cout << "\nLa raiz no tiene ancestros\n";
         return;
     }
 

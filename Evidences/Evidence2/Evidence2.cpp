@@ -272,8 +272,8 @@ int main() {
     
     // inicializamos opción para arrancar el ciclo del menú principal
     option = -1;
-    // validamos que la opción este disponible y sea distinta a salida (0)
-    while (option != 0) {
+    // validamos que la opción este disponible y sea distinta a salida
+    while (option != 5) {
 
         cout << "\nQue accion desea realizar?" << endl;
         cout << "1. Ordenar logs" << endl;
