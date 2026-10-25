@@ -6,6 +6,7 @@
 
 #include "NodeT.h"
 #include <iostream>
+#include <queue>
 using namespace std;
 
 template <typename T>
@@ -17,6 +18,7 @@ class BST {
         void inOrder(NodeT<T>* node);
         void postOrder(NodeT<T>* node);
         void levelPerLevel(NodeT<T>* node);
+        int calculateHeight(NodeT<T>* node);
     public:
         BST() : root(nullptr) {}
         void insert(T data);
@@ -24,6 +26,9 @@ class BST {
         void visit(string method);
         void remove(T data);
         void print();
+        int height();
+        void ancestors(T data);
+        int whatLevelAml(T data);
 };
 
 template <typename T>
@@ -139,7 +144,22 @@ void BST<T>::postOrder(NodeT<T>* node) {
 template <typename T>
 void BST<T>::levelPerLevel(NodeT<T>* node) {
     if (node != nullptr) {
-       
+       // creamos una fila de nodos
+       queue<NodeT<T>*> nodeQueue;
+       // agregamos a la fila el nodo dado
+       nodeQueue.push(node);
+       // iteramos mientras la fila no este vacia
+       while (!nodeQueue.empty()) {
+            // imprimimos el primer elemento de la fila
+            node = nodeQueue.front();
+            cout << node->data << " ";
+            // eliminamos el elemento de la fila
+            nodeQueue.pop();
+            // agregamos a los hijos del elemento eliminado si existen
+            if (node->left != nullptr) nodeQueue.push(node->left);
+            if (node->right != nullptr) nodeQueue.push(node->right);
+        }
+        cout << endl;
     }
 }
 
@@ -317,6 +337,84 @@ void BST<T>::remove(T data) {
         }
     }
 }
+
+template <typename T>
+int BST<T>::calculateHeight(NodeT<T>* node) {
+    // si el nodo es nulo, la altura es 0 
+    if (node == nullptr) {
+        return 0;
+    }
+    
+    // utilizamos recursion para calcular la altura de los subarboles izquierdo y derecho
+    int leftHeight = calculateHeight(node->left);
+    int rightHeight = calculateHeight(node->right);
+    
+    // retornamos la mayor altura de los dos subárboles más 1
+    return max(leftHeight, rightHeight) + 1;
+}
+
+template <typename T>
+int BST<T>::height() {
+    return calculateHeight(root);
+}
+
+template <typename T>
+void BST<T>::ancestors(T data) {
+    // si el arbol esta vacio, no hay ancestros
+    if (root == nullptr) {
+        return;
+    }
+
+    // si el dato esta en la raiz, no tiene ancestros
+    if (root->data == data) {
+        return;
+    }
+
+    // creamos un nodo igual a root
+    NodeT<T>* node = root;
+
+    // iteramos mientras que node no sea nulo
+    while (node != nullptr) {
+        // validamos si el dato actual es el objetivo
+        if (node->data == data) {
+            // si es el dato dado, terminamos el programa
+            return;
+        } else {
+            // imprimimos el nodo actual como ancestro
+            cout << node->data << " ";
+            // recorremos node
+            node = (data < node->data) ? node->left : node->right;
+        }
+    }   
+}
+
+template <typename T>
+int BST<T>::whatLevelAml(T data) {
+    // validamos si el arbol esta vacio
+    if (root != nullptr) {
+        // creamos un contador para los niveles
+        int counter = 1;
+        // creamos un nodo igual a root
+        NodeT<T>* node = root;
+        // iteramos mientras que node no sea nulo
+        while (node != nullptr) {
+            // validamos si el dato actual es el dato dado
+            if (node->data == data) {
+                // retornamos el nivel
+                return counter;
+            } else {
+                // recorremos node
+                node = (data < node->data) ? node->left : node->right;
+                // incrementamos counter
+                counter++;
+            }
+        }
+        return -1;
+    } else {
+        return -1;
+    }
+}
+
 
 template <typename T>
 void BST<T>::print() {
