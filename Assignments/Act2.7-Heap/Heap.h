@@ -78,6 +78,4 @@ void Heap<T>::printTree(int index, int space) {
     printTree(2 * index + 1, space);
 }
 
-
-
 #endif // Heap_h
