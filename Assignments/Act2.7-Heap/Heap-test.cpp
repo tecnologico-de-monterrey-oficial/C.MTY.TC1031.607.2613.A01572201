@@ -1,18 +1,19 @@
 // Daniel Gómez Guerrero
 // A01572201
 
-#include <iostream>
-using namespace std;
 #include "Heap.h"
 
 int main() {
-    Heap<int> heap;
+    /*Heap<int> heap;
     heap.push(10);
     heap.push(20);
     heap.push(5);
     heap.push(30);
     heap.push(15);
-    heap.push(25);
+    heap.push(25);*/
+
+    vector<int> list = {30, 50, 20, 90, 40, 80, 70};
+    Heap<int> heap(list);
     heap.print();
     heap.printTree(0, 0);
 

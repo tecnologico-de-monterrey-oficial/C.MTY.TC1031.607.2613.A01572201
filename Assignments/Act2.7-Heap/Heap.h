@@ -5,18 +5,73 @@
 #define Heap_h
 
 #include <vector>
+#include <iostream>
+using namespace std;
 
 template <typename T>
 class Heap {
     private:
         vector<T> heap;
         void swap(int a, int b);
+        void shiftDown(int aux);
     public:
         Heap() {};
+        Heap(vector<T> list);
         void push(T data);
         void print();
         void printTree(int index, int space);
+        T pop();
 };
+
+// shiftDown
+template <typename T>
+void Heap<T>::shiftDown(int aux) {
+   // obtenemos el ultimo parent
+    int lastParent = heap.size() / 2 - 1;
+    // iteramos mientras los hijos de aux sean padres
+    while (aux <= lastParent) {
+        // calculamos el índice de primer hijo
+        int first = aux * 2 + 1;
+        // validar si aux tiene 2 hijos o 1 hijo
+        // definimos una varibale para determinar cual hijo es mayor
+        int elder;
+        if (first == heap.size()-1) {
+            // tiene un hijo
+            elder = first;
+        } else {
+            // tiene dos hijos
+            // calculamos el 2do hijo
+            int second = aux * 2 + 2;
+            // validamos cual es que tiene mayor prioridad
+            elder = (heap[first] > heap[second]) ? first : second;
+        }
+        // comparamos si el más grande de los hijos es mayor a aux
+        if (heap[elder] > heap[aux]) {
+            // el mayor de los hijos es de mayor priodidad que el padre
+            swap(aux, elder);
+            // cambiamos el valor de aux igual a elder
+            aux = elder;
+        } else {
+            aux = lastParent+1;
+        }
+    }
+}
+
+// constructor en base a una lista
+template <typename T>
+Heap<T>::Heap(vector<T> list) {
+    // actualizamos heap con el valor de list
+    heap = list;
+    // determinar cual es el último de los padres
+    int lastParent = heap.size() / 2 - 1;
+    // iteramos desde el último de los padres hasta el primero
+    int parent = lastParent;
+    while (parent >= 0) {
+        shiftDown(parent);
+        // decrementamos el valor del indice del padre actual
+        parent--;
+    }
+}
 
 // swap function to swap two elements in the heap
 template <typename T>
@@ -24,6 +79,18 @@ void Heap<T>::swap(int a, int b) {
     T temp = heap[a];
     heap[a] = heap[b];
     heap[b] = temp;
+}
+
+template <typename T>
+T Heap<T>::pop() {
+    if (heap.size() > 0) {
+        T data = heap[0];
+        heap[0] = heap[heap.size()-1];
+        heap.pop_back();
+        shiftDown(0);
+        return data;
+    }
+    throw std::out_of_range("Heap is empty");
 }
 
 template <typename T>
