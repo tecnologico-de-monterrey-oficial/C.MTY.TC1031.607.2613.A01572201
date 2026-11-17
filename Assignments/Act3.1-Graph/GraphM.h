@@ -24,9 +24,9 @@ class GraphM {
 
 // constructor
 GraphM::GraphM() {
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 8; i++) {
         vertices[i] = "";
-        for (int j = 0; j < 0; j++) {
+        for (int j = 0; j < 8; j++) {
             matrix[i][j] = 0;
         }
     }
@@ -46,7 +46,7 @@ int GraphM::findVertex(string vertex) {
 // agrega un vertice al grafo
 void GraphM::addVertex(string vertex) {
     // validamos que no este llena la matriz
-    if (size < 0) {
+    if (size < 8) {
         // si se pueden agregar vertices
         // agrega al arreglo de vertices el vértice nuevo
         vertices[size] = vertex;
