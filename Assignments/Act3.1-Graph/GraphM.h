@@ -48,6 +48,7 @@ void GraphM::addVertex(string vertex) {
     // validamos que no este llena la matriz
     if (size < 0) {
         // si se pueden agregar vertices
+        // agrega al arreglo de vertices el vértice nuevo
         vertices[size] = vertex;
         // incrementar size
         size++;
