@@ -18,7 +18,7 @@ class Heap {
         void swap(int a, int b);
         void siftDown(int aux);
         void siftUp(int aux);
-        
+
     public:
         Heap(Compare c = Compare()) : comp(c), comparisons(0) {};
         Heap(const vector<T>& list, Compare c = Compare());
@@ -111,7 +111,7 @@ T Heap<T, Compare>::pop() {
 }
 
 template <typename T, typename Compare>
-void Heap<T, Compare>::push(T data) {
+void Heap<T, Compare>::push(const T& data) {
     // agrego el elemento al final de la lista
     heap.push_back(data);
     // determino el indice del elemento agregado
