@@ -8,7 +8,8 @@
 #include <iostream>
 using namespace std;
 
-template <typename T, typename Compare = std::less<T>>
+
+template <typename T, typename Compare = less<T>> // less<T> para max heap, greater<T> para min heap
 class Heap {
     private:
         vector<T> heap;
@@ -29,7 +30,10 @@ class Heap {
         bool empty() const { return heap.empty(); }
         size_t size() const { return heap.size(); }
         int height() const;
+        static void heapSort(vector<T>& list, Compare c = Compare());
 
+        size_t getComparisons() const { return comparisons; }
+        void resetComparisons() { comparisons = 0; }
         void print() const;
         void printTree(int index, int space) const;
 };
@@ -142,6 +146,7 @@ void Heap<T, Compare>::push(const T& data) {
 template <typename T, typename Compare>
 const T& Heap<T, Compare>::top() const {
     if (!heap.empty()) {
+        // retornamos el primer elemento del heap
         return heap[0];
     }
     throw std::out_of_range("Heap is empty");
@@ -152,13 +157,30 @@ int Heap<T, Compare>::height() const {
     if (heap.empty()) {
         return -1;
     }
+    // inicializamos la altura en 0 y el índice en 0
     int h = 0;
     int index = 0;
+    // iteramos mientras el índice del hijo izquierdo sea menor al tamaño del heap
     while (2 * index + 1 < static_cast<int>(heap.size())) {
+        // incrementamos la altura
         h++;
+        // actualizamos el índice al hijo izquierdo
         index = 2 * index + 1;
     }
+    // retornamos la altura
     return h;
+}
+
+// heapSort (less<T> de menor a mayor, greater<T> de mayor a menor)
+template <typename T, typename Compare>
+void Heap<T, Compare>::heapSort(vector<T>& list, Compare c) {
+    // creamos un heap con la lista y el comparador dado
+    Heap<T, Compare> heap(list, c);
+    // iteramos desde el final de la lista hasta el inicio
+    for (int i = static_cast<int>(list.size()) - 1; i >= 0; i--) {
+        // asignamos el valor del pop del heap a la posición actual de la lista
+        list[i] = heap.pop();
+    }
 }
 
 // print function to print the elements of the heap
