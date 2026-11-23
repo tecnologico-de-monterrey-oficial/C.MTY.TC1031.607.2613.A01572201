@@ -9,6 +9,30 @@
 #include <queue>
 using namespace std;
 
+struct IpRecord {
+    string rawIp;
+    string numericIp;
+
+    // constructores
+    IpRecord() : rawIp(""), numericIp("") {}
+    IpRecord(const string& ip, const string& arrangedIp) : rawIp(ip), numericIp(arrangedIp) {}
+
+    // Sobrecarga de operadores
+    bool operator==(const IpRecord& other) const {
+        return numericIp == other.numericIp;
+    }
+
+    bool operator<(const IpRecord& other) const {
+        return numericIp < other.numericIp;
+    }
+
+    friend ostream& operator<<(ostream& os, const IpRecord& record) {
+        os << record.rawIp;
+        return os;
+    }
+
+};
+
 template <typename T>
 class BST {
     private:
