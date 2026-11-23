@@ -34,7 +34,29 @@ class Heap {
         void printTree(int index, int space) const;
 };
 
-// shiftDown
+// swap function to swap two elements in the heap
+template <typename T, typename Compare>
+void Heap<T, Compare>::swap(int a, int b) {
+    T temp = heap[a];
+    heap[a] = heap[b];
+    heap[b] = temp;
+}
+
+// constructor en base a una lista
+template <typename T, typename Compare>
+Heap<T, Compare>::Heap(const vector<T>& list, Compare c) : heap(list), comp(c), comparisons(0) {
+    // determinar cual es el último de los padres
+    int lastParent = static_cast<int>(heap.size()) / 2 - 1;
+    // iteramos desde el último de los padres hasta el primero
+    int parent = lastParent;
+    while (parent >= 0) {
+        siftDown(parent);
+        // decrementamos el valor del indice del padre actual
+        parent--;
+    }
+}
+
+// siftDown
 template <typename T, typename Compare>
 void Heap<T, Compare>::siftDown(int aux) {
     // obtenemos el tamaño del heap
@@ -74,26 +96,25 @@ void Heap<T, Compare>::siftDown(int aux) {
     }
 }
 
-// constructor en base a una lista
+// siftUp
 template <typename T, typename Compare>
-Heap<T, Compare>::Heap(const vector<T>& list, Compare c) : heap(list), comp(c), comparisons(0) {
-    // determinar cual es el último de los padres
-    int lastParent = static_cast<int>(heap.size()) / 2 - 1;
-    // iteramos desde el último de los padres hasta el primero
-    int parent = lastParent;
-    while (parent >= 0) {
-        siftDown(parent);
-        // decrementamos el valor del indice del padre actual
-        parent--;
+void Heap<T, Compare>::siftUp(int aux) {
+    // iteramos mientras aux sea mayor a 0
+    while (aux > 0) {
+        // obtenemos el índice del padre
+        int father = (aux - 1) / 2;
+        // incrementamos el contador de comparaciones
+        comparisons++;
+        // comparamos si aux es mayor que su padre
+        if (comp(heap[father], heap[aux])) {
+            // aux es mayor que su padre
+            swap(aux, father);
+            // cambiamos el valor de aux igual a father
+            aux = father;
+        } else {
+            aux = 0;
+        }
     }
-}
-
-// swap function to swap two elements in the heap
-template <typename T, typename Compare>
-void Heap<T, Compare>::swap(int a, int b) {
-    T temp = heap[a];
-    heap[a] = heap[b];
-    heap[b] = temp;
 }
 
 template <typename T, typename Compare>
@@ -114,27 +135,30 @@ template <typename T, typename Compare>
 void Heap<T, Compare>::push(const T& data) {
     // agrego el elemento al final de la lista
     heap.push_back(data);
-    // determino el indice del elemento agregado
-    int index = heap.size() - 1;
-    // determino el indice del padre
-    int father = (index - 1) / 2;
-    // itero mientras el índice del padre sea mayor o igual a 0
-    while (father >= 0) {
-        // comparo si el valor del indice es mayor al valor del padre
-        if (heap[index] > heap[father]) {
-            // si es mayor
-            // intercambio los valores
-            swap(index, father);
-            // hago que el indice sea igual al padre
-            index = father;
-            // calculo el nuevo padre
-            father = (index - 1) / 2;
-        } else {
-            // no es mayor
-            // me salgo de la función
-            return;
-        }
+    // llamo a siftUp para mantener la propiedad del heap
+    siftUp(static_cast<int>(heap.size()) - 1);
+}
+
+template <typename T, typename Compare>
+const T& Heap<T, Compare>::top() const {
+    if (!heap.empty()) {
+        return heap[0];
     }
+    throw std::out_of_range("Heap is empty");
+}
+
+template <typename T, typename Compare>
+int Heap<T, Compare>::height() const {
+    if (heap.empty()) {
+        return -1;
+    }
+    int h = 0;
+    int index = 0;
+    while (2 * index + 1 < static_cast<int>(heap.size())) {
+        h++;
+        index = 2 * index + 1;
+    }
+    return h;
 }
 
 // print function to print the elements of the heap
