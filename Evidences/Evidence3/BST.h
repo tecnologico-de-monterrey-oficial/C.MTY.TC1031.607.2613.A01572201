@@ -9,34 +9,17 @@
 #include <queue>
 using namespace std;
 
-struct IpRecord {
-    string rawIp;
-    string numericIp;
-
-    // constructores
-    IpRecord() : rawIp(""), numericIp("") {}
-    IpRecord(const string& ip, const string& arrangedIp) : rawIp(ip), numericIp(arrangedIp) {}
-
-    // Sobrecarga de operadores
-    bool operator==(const IpRecord& other) const {
-        return numericIp == other.numericIp;
-    }
-
-    bool operator<(const IpRecord& other) const {
-        return numericIp < other.numericIp;
-    }
-
-    friend ostream& operator<<(ostream& os, const IpRecord& record) {
-        os << record.rawIp;
-        return os;
-    }
-
+struct searchResult {
+    bool found;
+    int count;
+    int comparisons;
 };
 
 template <typename T>
 class BST {
     private:
         NodeT<T>* root;
+        int nodeCount;
         void printTree(NodeT<T>* node, string prefix, bool isRight, bool isRoot);
         void preOrder(NodeT<T>* node);
         void inOrder(NodeT<T>* node);
@@ -44,7 +27,9 @@ class BST {
         void levelPerLevel(NodeT<T>* node);
         int calculateHeight(NodeT<T>* node);
     public:
-        BST() : root(nullptr) {}
+        BST() : root(nullptr), nodeCount(0) {}
+        searchResult search(T data);
+        int size() { return nodeCount; }
         void insert(T data);
         bool find(T data);
         void visit(string method);
@@ -62,6 +47,8 @@ void BST<T>::insert(T data) {
         // el arbol esta vacio
         // apuntamos root al nuevo nodo
         root = new NodeT<T>(data);
+        // incrementamos el contador de nodos
+        nodeCount++;
     } else {
         // el arbol no esta vacio
         // creamos un apuntador aux igual a root
@@ -72,6 +59,8 @@ void BST<T>::insert(T data) {
         while (aux != nullptr) {
             // valido si aux->data es igual a data
             if (aux->data == data) {
+                // incrementamos el contador de apariciones del nodo
+                aux->count++;
                 // son iguales
                 return;
             } else {
@@ -94,6 +83,8 @@ void BST<T>::insert(T data) {
             // el nodo va al lado derecho de father
             father->right = new NodeT<T>(data);
         }
+        // incrementamos el contador de nodos
+        nodeCount++;
     }
 }
 
@@ -133,7 +124,7 @@ template <typename T>
 void BST<T>::preOrder(NodeT<T>* node) {
     if (node != nullptr) {
         // imprimimos data
-        cout << node->data << " ";
+        cout << node->data << " (" << node->count << ") ";
         // hacemos preOrder con left
         preOrder(node->left);
         // hacemos preOrder con right
@@ -147,7 +138,7 @@ void BST<T>::inOrder(NodeT<T>* node) {
         // hacemos inOrder con left
         inOrder(node->left);
         // imprimimos data
-        cout << node->data << " ";
+        cout << node->data << " (" << node->count << ") ";
         // hacemos inOrder con right
         inOrder(node->right);
     }
@@ -161,7 +152,7 @@ void BST<T>::postOrder(NodeT<T>* node) {
         // hacemos postOrder con right
         postOrder(node->right);
         // imprimimos data
-        cout << node->data << " ";
+        cout << node->data << " (" << node->count << ") ";
     }
 }
 
@@ -223,6 +214,8 @@ void BST<T>::remove(T data) {
                 root = nullptr;
                 // removemos aux
                 delete aux;
+                // decrementamos el contador de nodos
+                nodeCount--;
                 // nos salimos de la funcion
                 return;
             }
@@ -235,6 +228,8 @@ void BST<T>::remove(T data) {
                 root = (root->left == nullptr) ? root = root->right : root = root->left;
                 // removemos aux
                 delete aux;
+                // decrementamos el contador de nodos
+                nodeCount--;
                 // nos salimos de la funcion
                 return;
             }
@@ -252,6 +247,8 @@ void BST<T>::remove(T data) {
                 aux->left = auxRemove->left;
                 // removemos auxRemove
                 delete auxRemove;
+                // decrementamos el contador de nodos
+                nodeCount--;
                 // nos salimos de la funcion
                 return;
             } else {
@@ -273,6 +270,8 @@ void BST<T>::remove(T data) {
                 fatherRemove->right = nullptr;
                 // removemos auxRemove
                 delete auxRemove;
+                // decrementamos el contador de nodos
+                nodeCount--;
                 // nos salimos de la funcion
                 return;
             }
@@ -296,6 +295,8 @@ void BST<T>::remove(T data) {
                         (data < father->data) ? father->left = nullptr : father->right = nullptr;
                         // removemos aux
                         delete aux;
+                        // decrementamos el contador de nodos
+                        nodeCount--;
                         // nos salimos de la funcion
                         return;
                     }
@@ -311,6 +312,8 @@ void BST<T>::remove(T data) {
                         }
                         // removemos aux
                         delete aux;
+                        // decrementamos el contador de nodos
+                        nodeCount--;
                         // nos salimos de la funcion
                         return;
                     }
@@ -326,6 +329,8 @@ void BST<T>::remove(T data) {
                         aux->left = auxRemove->left;
                         // removemos auxRemove
                         delete auxRemove;
+                        // decrementamos el contador de nodos
+                        nodeCount--;
                         // nos salimos de la funcion
                         return;
                     } else {
@@ -347,6 +352,8 @@ void BST<T>::remove(T data) {
                         fatherRemove->right = nullptr;
                         // removemos auxRemove
                         delete auxRemove;
+                        // decrementamos el contador de nodos
+                        nodeCount--;
                         // nos salimos de la funcion
                         return;
                     }
@@ -439,6 +446,34 @@ int BST<T>::whatLevelAml(T data) {
     } else {
         return -1;
     }
+}
+
+template <typename T>
+searchResult BST<T>::search(T data) {
+    // inicializamos el resultado de la busqueda
+    searchResult result {false, 0, 0};
+    // creamos un nodo auxiliar igual a root
+    NodeT<T>* aux = root;
+    // validamos si el arbol esta vacio
+    if (aux != nullptr) {
+        while (aux != nullptr) {
+            // incrementamos el contador de comparaciones
+            result.comparisons++;
+            // validamos si aux->data es igual a data
+            if (aux->data == data) {
+                // son iguales
+                result.found = true;
+                result.count = aux->count;
+                return result;
+            } else {
+                // recorremos aux
+                aux = (data < aux->data) ? aux->left : aux->right;
+                // incrementamos el contador de comparaciones
+                result.comparisons++;
+            }
+        }
+    }
+    return result;
 }
 
 
