@@ -38,6 +38,30 @@ string monthValues(string month) {
     return convert[month];
 };
 
-int main() {
+void generateFile(string fileName, vector<Log> list, int inicio, int fin) {
+    // creamos un archivo con el nombre fileName
+    ofstream file;
 
+    // abrimos el archivo en modo escritura y truncado
+    file.open(fileName, ofstream::out | fstream::trunc);
+
+    // si el archivo se abrió correctamente, escribimos los logs en el archivo
+    if (file.is_open()) {
+        // iteramos desde inicio hasta fin
+        for (int i = inicio; i <= fin; i++) {
+            // escribimos el log en la posición i en el archivo
+            file << list[i].rawLog << endl;
+        }
+    } else {
+        // si el archivo no se abrió correctamente, imprimimos un mensaje de error
+        cout << "Error al abrir el archivo" << endl;
+    }
+
+    // cerramos el archivo
+    file.close();
+}
+
+int main() {
+    // Archivo de entrada
+    ifstream fileIn("log607-3.json");
 }
