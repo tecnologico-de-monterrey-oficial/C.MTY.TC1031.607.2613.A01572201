@@ -4,8 +4,11 @@
 #include "BST.h"
 #include "Log.h"
 #include "Heap.h"
+#include "json.hpp"
 
-struct IpRecord {
+using json = nlohmann::json;
+
+/*struct IpRecord {
     string rawIp;
     string numericIp;
 
@@ -26,7 +29,7 @@ struct IpRecord {
         os << record.rawIp;
         return os;
     }
-};
+};*/
 
 string monthValues(string month) {
     // creamos un mapa con los valores de los meses y su valor en número
@@ -62,6 +65,52 @@ void generateFile(string fileName, vector<Log> list, int inicio, int fin) {
 }
 
 int main() {
-    // Archivo de entrada
+    // archivo de entrada
     ifstream fileIn("log607-3.json");
+    // aefinir archivos de salida
+    string outputFile1 = "output608-1.out";
+    string outputFile2 = "output608-2.out";
+    // variable para almacenar cada renglon del archivo
+    string line;
+    // variables para guardar los datos de los logs
+    string  month, day, year, time, ip, message;
+    // objetos para almacenar los logs
+    Heap<Log, greater<Log>> minHeapLogs;
+    Heap<Log, less<Log>> maxHeapLogs;
+    BST<string> logsBST;
+    // vectores para almacenar los logs
+    vector<Log> sortLogs1, sortLogs2;
+    // ciclo para leer el archivo línea por línea
+    while (getline(fileIn, line)) {
+        // parseamos el renglón como JSON
+        json logJson = json::parse(line);
+        // extraemos los datos del log
+        month = logJson["month"];
+        day = logJson["day"];
+        year = logJson["year"];
+        time = logJson["time"];
+        ip = logJson["ip"];
+        message = logJson["message"];
+
+        // creamos un objeto Log y le asignamos los datos
+        Log log;
+        log.month = month;
+        log.day = day;
+        log.year = year;
+        log.time = time;
+        log.ip = ip;
+        log.log = message;
+        // arreglamos la IP y el tiempo
+        log.ip = log.arrangeIp(ip);
+        log.time = log.arrangeTime(time);
+        // creamos la clave única del log
+        log.key = log.createKey(year, monthValues(month), day, time, ip);
+
+        // agregamos el log a los heaps y al BST
+        minHeapLogs.push(log);
+        maxHeapLogs.push(log);
+        logsBST.insert(log.key);
+    }
+    
+
 }
