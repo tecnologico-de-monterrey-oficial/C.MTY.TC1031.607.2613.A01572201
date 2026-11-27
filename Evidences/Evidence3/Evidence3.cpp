@@ -112,5 +112,27 @@ int main() {
         logsBST.insert(log.key);
     }
     
+    // inicializamos variables para menu
+    int option = -1;
+    bool sortMaxHeap = false;
+    string ipSearch;
+    int ipCount = 0;
+
+    // inicializamos estructuras de datos para almacenar los logs y las IPs
+    BST<string> holdBST;
+    Heap<int, less<int>> holdHeap;
+    map<string, int> ipMap;
+
+    // ciclo para mostrar el menú y procesar las opciones
+    while (option != 5) {
+        cout << "\nQue accion desea realizar?" << endl;
+        cout << "1. Ordenar de mayor a menor (MaxHeap)." << endl;
+        cout << "2. Ordenar de menor a mayor (MinHeap)." << endl;
+        cout << "3. Top 10 de IPs con más registros (MaxHeap)." << endl;
+        cout << "4. Búsqueda por IP con BST." << endl;
+        cout << "5. Salir." << endl;
+        cin >> option;
+    }
+    
 
 }
