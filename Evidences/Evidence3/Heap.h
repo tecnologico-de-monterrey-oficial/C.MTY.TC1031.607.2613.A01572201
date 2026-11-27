@@ -31,8 +31,8 @@ class Heap {
         bool empty() const { return heap.empty(); }
         size_t size() const { return heap.size(); }
         int height() const;
-        T getData(int index) const { return heap[index]; }
-        static void heapSort(vector<T>& list, Compare c = Compare());
+        T getData(int index) const { return heap.at(index); }
+        vector<T> heapSort(vector<T>& list, Compare c = Compare());
 
         size_t getComparisons() const { return comparisons; }
         void resetComparisons() { comparisons = 0; }
@@ -175,7 +175,7 @@ int Heap<T, Compare>::height() const {
 
 // heapSort (less<T> de menor a mayor, greater<T> de mayor a menor)
 template <typename T, typename Compare>
-void Heap<T, Compare>::heapSort(vector<T>& list, Compare c) {
+vector<T> Heap<T, Compare>::heapSort(vector<T>& list, Compare c) {
     // creamos un heap con la lista y el comparador dado
     Heap<T, Compare> heap(list, c);
     // iteramos desde el final de la lista hasta el inicio
@@ -183,6 +183,7 @@ void Heap<T, Compare>::heapSort(vector<T>& list, Compare c) {
         // asignamos el valor del pop del heap a la posición actual de la lista
         list[i] = heap.pop();
     }
+    return list;
 }
 
 // print function to print the elements of the heap
