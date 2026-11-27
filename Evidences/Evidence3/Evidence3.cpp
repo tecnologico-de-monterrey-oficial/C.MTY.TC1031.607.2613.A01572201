@@ -132,6 +132,32 @@ int main() {
         cout << "4. Búsqueda por IP con BST." << endl;
         cout << "5. Salir." << endl;
         cin >> option;
+
+        switch (option) {
+            case 1: 
+                sortLogs1.clear();
+                // extraemos los logs del maxHeapLogs y los guardamos en sortLogs1
+                while (!maxHeapLogs.empty()) {
+                    sortLogs1.push_back(maxHeapLogs.pop());
+                }
+                // generamos el archivo de salida con los logs ordenados de mayor a menor
+                generateFile(outputFile1, sortLogs1, 0, static_cast<int>(sortLogs1.size()) - 1);
+                cout << "Archivo generado: " << outputFile1 << endl;
+                sortMaxHeap = true;
+                break;
+            
+            case 2:
+                sortLogs2.clear();
+                // extraemos los logs del minHeapLogs y los guardamos en sortLogs2
+                while (!minHeapLogs.empty()) {
+                    sortLogs2.push_back(minHeapLogs.pop());
+                }
+                // generamos el archivo de salida con los logs ordenados de menor a mayor
+                generateFile(outputFile2, sortLogs2, 0, static_cast<int>(sortLogs2.size()) - 1);
+                cout << "Archivo generado: " << outputFile2 << endl;
+                break;
+            
+            case 3:
     }
     
 
