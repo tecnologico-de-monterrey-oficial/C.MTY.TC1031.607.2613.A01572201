@@ -158,6 +158,31 @@ int main() {
                 break;
             
             case 3:
+            // verificamos que se haya generado el archivo ordenado de mayor a menor
+            if(!sortMaxHeap){
+                cout << "\nEl documento ordenado no se ha generado aun (realizar accion 1 primero).\n";
+                option = -1;
+                break;
+            }
+
+            // creamos un mapa para contar las ocurrencias de cada IP
+            ipMap.clear();
+            for (int i = 0; i < maxHeapLogs.size(); i++) {
+                if (ipMap.find(maxHeapLogs.getData(i).ip) == ipMap.end()) {
+                    // si la IP no está en el mapa, la agregamos con valor 1
+                    ipMap[maxHeapLogs.getData(i).ip] = 1;
+                } else {
+                    // si la IP ya está en el mapa, incrementamos su valor en 1
+                    ipMap[maxHeapLogs.getData(i).ip]++;
+                }
+            }
+
+            for (const auto& pair : ipMap) {
+                // agregamos el conteo de cada IP al holdHeap
+                holdHeap.push(pair.second);
+            }
+
+                
     }
     
 

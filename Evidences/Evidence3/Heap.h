@@ -31,6 +31,7 @@ class Heap {
         bool empty() const { return heap.empty(); }
         size_t size() const { return heap.size(); }
         int height() const;
+        T getData(int index) const { return heap[index]; }
         static void heapSort(vector<T>& list, Compare c = Compare());
 
         size_t getComparisons() const { return comparisons; }
