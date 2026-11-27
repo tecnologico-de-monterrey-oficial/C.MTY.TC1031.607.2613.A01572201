@@ -214,7 +214,19 @@ int main() {
                 }
             }
 
-                
+            case 4: {
+                cout << "Ingrese la IP a buscar en el BST: ";
+            }
+
+            case 5:
+                // salimos del programa
+                cout << "Saliendo del programa..." << endl;
+                return 0;
+
+            default: 
+                cout << "Opcion no valida. Intente de nuevo." << endl;
+                option = -1; // reiniciamos la opción para que el ciclo continue
+                break;
         }
     
     }
