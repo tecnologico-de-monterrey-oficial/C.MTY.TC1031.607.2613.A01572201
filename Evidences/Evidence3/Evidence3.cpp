@@ -114,8 +114,11 @@ int main() {
         log.ip = log.arrangeIp(ip);
         log.time = log.arrangeTime(time);
 
+        // creamos el rawLog con los datos originales
+        log.rawLog = month + " " + day + " " + year + " " + time + " " + ip + " " + message;
+
         // creamos la clave única del log
-        log.key = log.createKey(year, monthValues(month), day, time, ip);
+        log.key = log.createKey(year, monthValues(month), day, log.time, log.ip);
 
         // agregamos el log a los heaps y al BST
         minHeapLogs.push(log);
@@ -212,10 +215,23 @@ int main() {
                 for (int i = 0; i < 10 && i < static_cast<int>(rankedIps.size()); i++) {
                     cout << "IP: " << rankedIps[i].first << " - Registros: " << rankedIps[i].second << endl;
                 }
+                break;
             }
 
             case 4: {
                 cout << "Ingrese la IP a buscar en el BST: ";
+                cin >> ipSearch;
+
+                // arreglamos la IP ingresada por el usuario para que coincida con el formato de las claves en el BST
+                string arrangedSearch = Log().arrangeIp(ipSearch);
+                // buscamos la IP en el BST y obtenemos el resultado
+                searchResult res = logsBST.search(arrangedSearch);
+                if (res.found) {
+                    cout << "\nLa IP " << ipSearch << " tiene " << res.count << " registros\n";
+                } else {
+                    cout << "\nLa IP " << ipSearch << " no fue encontrada en el BST.\n";
+                }
+                break;
             }
 
             case 5:
