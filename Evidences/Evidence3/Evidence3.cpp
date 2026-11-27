@@ -8,29 +8,6 @@
 
 using json = nlohmann::json;
 
-/*struct IpRecord {
-    string rawIp;
-    string numericIp;
-
-    // constructores
-    IpRecord() : rawIp(""), numericIp("") {}
-    IpRecord(const string& ip, const string& arrangedIp) : rawIp(ip), numericIp(arrangedIp) {}
-
-    // Sobrecarga de operadores
-    bool operator==(const IpRecord& other) const {
-        return numericIp == other.numericIp;
-    }
-
-    bool operator<(const IpRecord& other) const {
-        return numericIp < other.numericIp;
-    }
-
-    friend ostream& operator<<(ostream& os, const IpRecord& record) {
-        os << record.rawIp;
-        return os;
-    }
-};*/
-
 string monthValues(string month) {
     // creamos un mapa con los valores de los meses y su valor en número
     // para convertir el mes a número
