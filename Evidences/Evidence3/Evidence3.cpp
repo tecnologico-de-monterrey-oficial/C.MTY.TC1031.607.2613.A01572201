@@ -205,6 +205,8 @@ int main() {
                 searchResult res = logsBST.search(arrangedSearch);
                 if (res.found) {
                     cout << "\nLa IP " << ipSearch << " tiene " << res.count << " registros\n";
+                    cout << "Comparaciones realizadas durante la búsqueda: " << res.comparisons << endl;
+                    cout << "Altura del BST: " << logsBST.height() << endl;
                 } else {
                     cout << "\nLa IP " << ipSearch << " no fue encontrada en el BST.\n";
                 }
